@@ -686,3 +686,11 @@ These were found during exploration. Do not fix them without explicit user instr
 - Why: the user could not see jersey images on small screens and wanted Edit above Delete while staying in the same row.
 - Files changed: `js/admin.js`, `css/admin.css`, `NK.md`.
 - Verification: `node --check js/admin.js` passed; `css/admin.css` brace count matched 160/160; `git diff --check` passed.
+
+### 2026-11-25 — Mobile shop filter dropdowns
+
+- Changed: shop filters now use a horizontal Type and Price dropdown bar below 768px; the sticky desktop sidebar is hidden on small screens so it no longer covers listing cards.
+- Changed: category/price radios and mobile selects stay synchronized through `setCategory()` and `setPrice()`; category options now normalize `slug`/`id` from `Store.categories`.
+- Why: the user wants small-screen filters to behave differently from desktop and stop obstructing product cards.
+- Files changed: `shop.html`, `js/pages/shop.js`, `css/styles.css`, `NK.md`.
+- Verification: `node --check js/pages/shop.js` passed; `css/styles.css` brace count matched 365/365; `shop.html` tag-pair check passed; `git diff --check` passed.

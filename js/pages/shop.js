@@ -1,13 +1,51 @@
+const escShop = (value) => String(value || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+function shopCategoryOptions() {
+  const source = (typeof Store !== "undefined" && Store.categories && Store.categories.length)
+    ? Store.categories
+    : (typeof CATEGORIES !== "undefined" ? CATEGORIES : []);
+  const options = [{ slug: "all", name: "All" }];
+  source.forEach(cat => {
+    const slug = cat.slug || cat.id;
+    if (!slug || slug === "all" || options.some(o => o.slug === slug)) return;
+    options.push({ slug, name: cat.name || slug });
+  });
+  return options;
+}
+
 function renderCategoryFilters(activeSlug) {
-  const options = [{ slug: "all", name: "All" }].concat(
-    CATEGORIES.filter(c => c.slug !== "all")
-  );
+  const options = shopCategoryOptions();
+  const selected = options.some(cat => cat.slug === activeSlug) ? activeSlug : "all";
   document.getElementById("cat-filters").innerHTML = options.map(cat => `
     <label class="filter-option">
-      <input type="radio" name="cat" value="${cat.slug}" ${cat.slug === activeSlug ? "checked" : ""} onchange="applyFilters()">
-      ${cat.name}
+      <input type="radio" name="cat" value="${escShop(cat.slug)}" ${cat.slug === selected ? "checked" : ""} onchange="setCategory(this.value)">
+      ${escShop(cat.name)}
     </label>
   `).join("");
+
+  const catSelect = document.getElementById("cat-select");
+  if (catSelect) {
+    catSelect.innerHTML = options.map(cat => `<option value="${escShop(cat.slug)}">${escShop(cat.name)}</option>`).join("");
+    catSelect.value = selected;
+  }
+}
+
+function setCategory(value) {
+  document.querySelectorAll('input[name="cat"]').forEach(radio => {
+    radio.checked = radio.value === value;
+  });
+  const catSelect = document.getElementById("cat-select");
+  if (catSelect) catSelect.value = value;
+  applyFilters();
+}
+
+function setPrice(value) {
+  document.querySelectorAll('input[name="price"]').forEach(radio => {
+    radio.checked = radio.value === value;
+  });
+  const priceSelect = document.getElementById("price-select");
+  if (priceSelect) priceSelect.value = value;
+  applyFilters();
 }
 
 function applyFilters() {

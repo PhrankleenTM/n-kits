@@ -64,6 +64,22 @@
       <p class="text-muted" style="margin-bottom: 24px">Browse club, country, and fan-favorite kits. Filter by category or price to find your fit.</p>
 
       <div class="shop-layout">
+        <div class="mobile-filters">
+          <div class="mobile-filter">
+            <label for="cat-select">Type</label>
+            <select id="cat-select" onchange="setCategory(this.value)"></select>
+          </div>
+          <div class="mobile-filter">
+            <label for="price-select">Price</label>
+            <select id="price-select" onchange="setPrice(this.value)">
+              <option value="all">All</option>
+              <option value="under80">Under ₦80,000</option>
+              <option value="80to90">₦80k – ₦90k</option>
+              <option value="over90">Over ₦90,000</option>
+            </select>
+          </div>
+        </div>
+
         <aside class="filters">
           <div class="filter-group">
             <h3>Category</h3>
@@ -71,10 +87,10 @@
           </div>
           <div class="filter-group">
             <h3>Price</h3>
-            <label class="filter-option"><input type="radio" name="price" value="all" checked onchange="applyFilters()"> All</label>
-            <label class="filter-option"><input type="radio" name="price" value="under80" onchange="applyFilters()"> Under ₦80,000</label>
-            <label class="filter-option"><input type="radio" name="price" value="80to90" onchange="applyFilters()"> ₦80k – ₦90k</label>
-            <label class="filter-option"><input type="radio" name="price" value="over90" onchange="applyFilters()"> Over ₦90,000</label>
+            <label class="filter-option"><input type="radio" name="price" value="all" checked onchange="setPrice(this.value)"> All</label>
+            <label class="filter-option"><input type="radio" name="price" value="under80" onchange="setPrice(this.value)"> Under ₦80,000</label>
+            <label class="filter-option"><input type="radio" name="price" value="80to90" onchange="setPrice(this.value)"> ₦80k – ₦90k</label>
+            <label class="filter-option"><input type="radio" name="price" value="over90" onchange="setPrice(this.value)"> Over ₦90,000</label>
           </div>
         </aside>
 
