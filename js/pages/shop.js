@@ -1,5 +1,57 @@
 const escShop = (value) => String(value || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
+function shopPriceBounds() {
+  const prices = PRODUCTS.map(product => Number(product.price)).filter(value => Number.isFinite(value) && value >= 0);
+  if (!prices.length) return null;
+  const min = Math.min(...prices);
+  const max = Math.max(...prices);
+  if (min === max) return { min, max, low: min, high: max };
+  const span = max - min;
+  if (span < 3) return { min, max, low: min, high: max };
+  const roundTo = span >= 6000 ? 1000 : span >= 1500 ? 500 : 100;
+  let low = Math.round((min + span / 3) / roundTo) * roundTo;
+  let high = Math.round((min + (span * 2) / 3) / roundTo) * roundTo;
+  low = Math.max(min, Math.min(max, low));
+  high = Math.max(min, Math.min(max, high));
+  if (low <= min || high >= max || high <= low) {
+    low = Math.round(min + span / 3);
+    high = Math.round(min + (span * 2) / 3);
+  }
+  return { min, max, low, high };
+}
+
+function shopPriceOptions() {
+  const bounds = shopPriceBounds();
+  if (!bounds || bounds.low <= bounds.min || bounds.high >= bounds.max || bounds.high <= bounds.low) {
+    return [{ value: "all", label: "All" }];
+  }
+  return [
+    { value: "all", label: "All" },
+    { value: "under-low", label: `Under ${formatPrice(bounds.low)}` },
+    { value: "low-high", label: `${formatPrice(bounds.low)} – ${formatPrice(bounds.high)}` },
+    { value: "over-high", label: `Over ${formatPrice(bounds.high)}` }
+  ];
+}
+
+function renderPriceFilters(selected) {
+  const options = shopPriceOptions();
+  const safe = options.some(option => option.value === selected) ? selected : "all";
+  const group = document.getElementById("price-filters");
+  if (group) {
+    group.innerHTML = options.map(option => `
+      <label class="filter-option">
+        <input type="radio" name="price" value="${escShop(option.value)}" ${option.value === safe ? "checked" : ""} onchange="setPrice(this.value)">
+        ${escShop(option.label)}
+      </label>
+    `).join("");
+  }
+  const priceSelect = document.getElementById("price-select");
+  if (priceSelect) {
+    priceSelect.innerHTML = options.map(option => `<option value="${escShop(option.value)}">${escShop(option.label)}</option>`).join("");
+    priceSelect.value = safe;
+  }
+}
+
 function shopCategoryOptions() {
   const source = (typeof Store !== "undefined" && Store.categories && Store.categories.length)
     ? Store.categories
@@ -53,9 +105,10 @@ function applyFilters() {
   const price = document.querySelector('input[name="price"]:checked')?.value || "all";
   const sort = document.getElementById("sort").value;
   let products = getProductsByCategory(cat);
-  if (price === "under80") products = products.filter(p => p.price < 80000);
-  if (price === "80to90") products = products.filter(p => p.price >= 80000 && p.price <= 90000);
-  if (price === "over90") products = products.filter(p => p.price > 90000);
+  const bounds = shopPriceBounds();
+  if (price === "under-low" && bounds) products = products.filter(p => p.price < bounds.low);
+  if (price === "low-high" && bounds) products = products.filter(p => p.price >= bounds.low && p.price <= bounds.high);
+  if (price === "over-high" && bounds) products = products.filter(p => p.price > bounds.high);
   if (sort === "price-asc") products.sort((a, b) => a.price - b.price);
   if (sort === "price-desc") products.sort((a, b) => b.price - a.price);
   if (sort === "newest") products.sort((a, b) => b.id - a.id);
@@ -65,6 +118,7 @@ function applyFilters() {
 Store.ready().then(() => {
   const params = new URLSearchParams(window.location.search);
   renderCategoryFilters(params.get("cat") || "all");
+  renderPriceFilters("all");
   applyFilters();
 
   if (params.get("custom") === "1") {

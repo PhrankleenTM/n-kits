@@ -1349,6 +1349,12 @@ html[data-theme="dark"] .theme-icon--sun {
   font-weight: 600;
 }
 
+.category-price {
+  margin-top: 6px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
 /* Product grid */
 .product-grid {
   display: grid;

@@ -694,3 +694,11 @@ These were found during exploration. Do not fix them without explicit user instr
 - Why: the user wants small-screen filters to behave differently from desktop and stop obstructing product cards.
 - Files changed: `shop.html`, `js/pages/shop.js`, `css/styles.css`, `NK.md`.
 - Verification: `node --check js/pages/shop.js` passed; `css/styles.css` brace count matched 365/365; `shop.html` tag-pair check passed; `git diff --check` passed.
+
+### 2026-11-25 — Dynamic price ranges
+
+- Changed: shop price filters are generated from the actual min/max jersey prices instead of hardcoded ₦80k/₦90k bands; values become `under-low`, `low-high`, and `over-high`.
+- Changed: home category cards now show a per-category price range from listed jerseys, with single-price categories showing one price and empty categories showing `No jerseys yet`.
+- Why: the user wants both price filters and category-card prices to depend on listed jersey prices.
+- Files changed: `shop.html`, `js/pages/shop.js`, `js/pages/index.js`, `css/styles.css`, `NK.md`.
+- Verification: `node --check` passed for `js/pages/shop.js` and `js/pages/index.js`; CSS brace count matched 366/366; `shop.html` tag-pair check passed; sample data produced min `74000`, max `98000`, bands `82000`/`90000`; `git diff --check` passed.

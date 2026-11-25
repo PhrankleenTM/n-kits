@@ -71,12 +71,7 @@
           </div>
           <div class="mobile-filter">
             <label for="price-select">Price</label>
-            <select id="price-select" onchange="setPrice(this.value)">
-              <option value="all">All</option>
-              <option value="under80">Under ₦80,000</option>
-              <option value="80to90">₦80k – ₦90k</option>
-              <option value="over90">Over ₦90,000</option>
-            </select>
+            <select id="price-select" onchange="setPrice(this.value)"></select>
           </div>
         </div>
 
@@ -87,10 +82,7 @@
           </div>
           <div class="filter-group">
             <h3>Price</h3>
-            <label class="filter-option"><input type="radio" name="price" value="all" checked onchange="setPrice(this.value)"> All</label>
-            <label class="filter-option"><input type="radio" name="price" value="under80" onchange="setPrice(this.value)"> Under ₦80,000</label>
-            <label class="filter-option"><input type="radio" name="price" value="80to90" onchange="setPrice(this.value)"> ₦80k – ₦90k</label>
-            <label class="filter-option"><input type="radio" name="price" value="over90" onchange="setPrice(this.value)"> Over ₦90,000</label>
+            <div id="price-filters"></div>
           </div>
         </aside>
 
