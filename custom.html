@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Jerseys – N-KITS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Abel&amp;family=Anton&amp;family=Archivo+Black&amp;family=Bangers&amp;family=Barlow+Condensed:wght@400;600;700&amp;family=Bebas+Neue&amp;family=Caveat:wght@400;700&amp;family=Cinzel:wght@400;700&amp;family=Dancing+Script:wght@400;700&amp;family=Great+Vibes&amp;family=Inter:wght@400;700;900&amp;family=Lobster&amp;family=Lora:wght@400;700&amp;family=Montserrat:wght@400;700;900&amp;family=Oswald:wght@400;700&amp;family=Pacifico&amp;family=Playfair+Display:wght@400;700;900&amp;family=Press+Start+2P&amp;family=Roboto+Condensed:wght@400;700&amp;family=Rubik+Mono+One&amp;family=Russo+One&amp;family=Shrikhand&amp;family=Staatliches&amp;family=Teko:wght@400;600;700&amp;family=Titan+One&amp;family=Ultra&amp;family=Unbounded:wght@400;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/theme.js"></script>
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo" aria-label="N-KITS home">
+        <img class="logo-img logo-img--light" src="assets/logo/logo-dusk-transparent.png" alt="N-KITS">
+        <img class="logo-img logo-img--dark" src="assets/logo/logo-lavender-transparent.png" alt="N-KITS">
+      </a>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="custom.html" class="active">Custom</a>
+      </nav>
+      <div class="header-actions">
+        <a href="cart.html" class="icon-btn" aria-label="Cart">
+          <svg viewBox="0 0 24 24"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M6 6L5 3H2"/></svg>
+          <span class="cart-badge" style="display:none">0</span>
+        </a>
+        <a href="account.html" class="icon-btn" data-auth aria-label="Account">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+        </a>
+        <a href="login.html" class="icon-btn" data-guest aria-label="Login">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+        </a>
+        <button type="button" class="icon-btn theme-toggle" data-theme-toggle aria-label="Switch theme" title="Switch theme">
+          <svg class="theme-icon theme-icon--sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg class="theme-icon theme-icon--moon" viewBox="0 0 24 24"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+        <button type="button" class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu">
+          <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-nav" onclick="toggleMobileMenu()">
+    <div class="mobile-nav-inner" onclick="event.stopPropagation()">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop All</a>
+      <a href="custom.html">Custom</a>
+      <a href="cart.html">Cart</a>
+      <a href="account.html" data-auth>My Account</a>
+      <a href="login.html" data-guest>Login</a>
+    </div>
+  </div>
+
+  <section class="custom-hero">
+    <div class="container custom-hero-grid">
+      <div>
+        <h1>Your Name. Your Number. Your Jersey.</h1>
+        <p class="custom-lead">
+          Pick any jersey in the store and make it personal at checkout. Add a name, a number, or both for <span class="js-custom-fee">₦3,000</span> per customized jersey, review the details, and we will confirm everything on WhatsApp.
+        </p>
+        <div class="hero-actions">
+          <a href="shop.html?custom=1" class="btn btn-primary">Choose a Jersey</a>
+          <a href="#how-it-works" class="btn btn-secondary">How It Works</a>
+        </div>
+        <div class="hero-points">
+          <span>Any jersey</span>
+          <span>Name or number</span>
+        </div>
+      </div>
+      <div class="custom-preview" aria-label="Example custom jersey preview">
+        <div class="custom-kit" role="group" aria-label="Editable jersey preview">
+          <img class="custom-kit-image" src="assets/custom/jersey-back.png" alt="Back view jersey with editable name and number">
+          <input class="custom-kit-field custom-kit-name" type="text" value="YOUR NAME" maxlength="15" spellcheck="false" autocomplete="off" aria-label="Preview name" data-preview-field="name">
+          <input class="custom-kit-field custom-kit-number" type="text" value="10" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="Preview number" data-preview-field="number">
+        </div>
+        <span class="custom-preview-label">Click the name or number, then choose a font and size</span>
+        <div class="custom-preview-controls" aria-label="Preview font and size controls">
+          <div class="custom-control-group">
+            <span class="custom-control-title">Name</span>
+            <div class="custom-control-row">
+              <label>
+                <span>Font</span>
+                <select data-preview-option="name-font" aria-label="Name font"></select>
+              </label>
+              <label>
+                <span>Size (px)</span>
+                <input type="number" data-preview-option="name-size" value="14" min="8" max="32" step="1" aria-label="Name size in pixels">
+              </label>
+            </div>
+          </div>
+          <div class="custom-control-group">
+            <span class="custom-control-title">Number</span>
+            <div class="custom-control-row">
+              <label>
+                <span>Font</span>
+                <select data-preview-option="number-font" aria-label="Number font"></select>
+              </label>
+              <label>
+                <span>Size (px)</span>
+                <input type="number" data-preview-option="number-size" value="70" min="24" max="120" step="1" aria-label="Number size in pixels">
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="how-it-works">
+    <div class="container">
+      <h2 class="section-title">How customizing works</h2>
+      <p class="text-muted custom-section-intro">Three quick steps from your pick to your personalized kit.</p>
+      <div class="custom-steps">
+        <article class="custom-step">
+          <span class="step-number">1</span>
+          <h3>Choose your jersey</h3>
+          <p>Browse club kits, national teams, and fan favorites. Any jersey in the shop can be customized.</p>
+        </article>
+        <article class="custom-step">
+          <span class="step-number">2</span>
+          <h3>Add your details</h3>
+          <p>At checkout, switch on Add name and/or Add number for that jersey and enter only the details you want.</p>
+        </article>
+        <article class="custom-step">
+          <span class="step-number">3</span>
+          <h3>Confirm and order</h3>
+          <p>Order on WhatsApp. Your custom details are included with your order for confirmation.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border)">
+    <div class="container">
+      <h2 class="section-title">What you can customize</h2>
+      <div class="feature-grid">
+        <article class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h12M4 17h8"/></svg>
+          </div>
+          <h3>Name on the back</h3>
+          <p>Use up to 15 letters, numbers, or spaces. Your name is checked at checkout before the order is placed.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 8h2a3 3 0 0 1 0 6H9V8zM9 14v3"/></svg>
+          </div>
+          <h3>Jersey number</h3>
+          <p>Choose any number from 0 to 99. We check the number with your order so there is no guesswork.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18M7 15h4"/></svg>
+          </div>
+          <h3>Simple custom fee</h3>
+          <p>Customization costs <strong class="js-custom-fee">₦3,000</strong> per customized jersey. The fee is shown in your cart and checkout total.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Good to know</h2>
+      <div class="custom-faq">
+        <details class="faq-item" open>
+          <summary>Can I customize any jersey?</summary>
+          <p>Yes. Choose any jersey in the shop, then add a name, a number, or both at checkout.</p>
+        </details>
+        <details class="faq-item">
+          <summary>How much does customization cost?</summary>
+          <p>Customization is <strong class="js-custom-fee">₦3,000</strong> for each customized jersey in your cart.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Can I add only a name or only a number?</summary>
+          <p>Yes. Name and number are separate options, so you can add either one or both.</p>
+        </details>
+        <details class="faq-item">
+          <summary>What are the name and number limits?</summary>
+          <p>Names can use up to 15 letters, numbers, or spaces. Jersey numbers can be from 0 to 99.</p>
+        </details>
+        <details class="faq-item">
+          <summary>How are my details confirmed?</summary>
+          <p>The details you add are included with your order. Our team confirms them with you on WhatsApp.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Can I change custom details after ordering?</summary>
+          <p>Changes are only possible before confirmation. Message us on WhatsApp as soon as you can if you need help.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 0">
+    <div class="container">
+      <div class="cta-band">
+        <div>
+          <h2>Ready to make it yours?</h2>
+          <p>Find your jersey, add your details at checkout, and let us handle the rest.</p>
+        </div>
+        <a href="shop.html?custom=1" class="btn btn-primary">Start Customizing</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <span>© 2026 N-KITS</span>
+        <span>Made for jersey lovers</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    Store.ready().then(function () {
+      document.querySelectorAll(".js-custom-fee").forEach(function (node) {
+        node.textContent = formatPrice(getCustomizationFee());
+      });
+    });
+
+    const customKit = document.querySelector(".custom-kit");
+    if (customKit) {
+      const fontLibrary = [
+        {
+          label: "Clean",
+          fonts: [
+            ["Abel", "'Abel', sans-serif"],
+            ["Inter", "'Inter', sans-serif"],
+            ["Montserrat", "'Montserrat', sans-serif"],
+            ["Roboto Condensed", "'Roboto Condensed', sans-serif"],
+            ["Barlow Condensed", "'Barlow Condensed', sans-serif"],
+            ["Oswald", "'Oswald', sans-serif"]
+          ]
+        },
+        {
+          label: "Sport",
+          fonts: [
+            ["Anton", "'Anton', sans-serif"],
+            ["Archivo Black", "'Archivo Black', sans-serif"],
+            ["Bebas Neue", "'Bebas Neue', sans-serif"],
+            ["Bangers", "'Bangers', cursive"],
+            ["Russo One", "'Russo One', sans-serif"],
+            ["Staatliches", "'Staatliches', sans-serif"],
+            ["Teko", "'Teko', sans-serif"],
+            ["Titan One", "'Titan One', cursive"],
+            ["Unbounded", "'Unbounded', sans-serif"],
+            ["Rubik Mono One", "'Rubik Mono One', monospace"],
+            ["Press Start 2P", "'Press Start 2P', monospace"]
+          ]
+        },
+        {
+          label: "Serif",
+          fonts: [
+            ["Cinzel", "'Cinzel', serif"],
+            ["Lora", "'Lora', serif"],
+            ["Playfair Display", "'Playfair Display', serif"],
+            ["Ultra", "'Ultra', serif"]
+          ]
+        },
+        {
+          label: "Script",
+          fonts: [
+            ["Caveat", "'Caveat', cursive"],
+            ["Dancing Script", "'Dancing Script', cursive"],
+            ["Great Vibes", "'Great Vibes', cursive"],
+            ["Lobster", "'Lobster', cursive"],
+            ["Pacifico", "'Pacifico', cursive"],
+            ["Shrikhand", "'Shrikhand', cursive"]
+          ]
+        }
+      ];
+      const scriptFonts = ["Caveat", "Dancing Script", "Great Vibes", "Lobster", "Pacifico", "Shrikhand"];
+
+      document.querySelectorAll('[data-preview-option$="-font"]').forEach(function (select) {
+        fontLibrary.forEach(function (group) {
+          const optgroup = document.createElement("optgroup");
+          optgroup.label = group.label;
+          group.fonts.forEach(function (font) {
+            const option = document.createElement("option");
+            option.value = font[1];
+            option.textContent = font[0];
+            optgroup.appendChild(option);
+          });
+          select.appendChild(optgroup);
+        });
+        select.value = select.dataset.previewOption === "name-font" ? "'Inter', sans-serif" : "'Bebas Neue', sans-serif";
+      });
+
+      const applyStyle = function (type) {
+        const field = customKit.querySelector('[data-preview-field="' + type + '"]');
+        if (!field) return;
+        const fontControl = document.querySelector('[data-preview-option="' + type + '-font"]');
+        const sizeControl = document.querySelector('[data-preview-option="' + type + '-size"]');
+        const font = fontControl && fontControl.value ? fontControl.value : type === "name" ? "'Inter', sans-serif" : "'Bebas Neue', sans-serif";
+        let size = type === "name" ? 14 : 70;
+        if (sizeControl) {
+          const min = Number(sizeControl.min) || 0;
+          const max = Number(sizeControl.max) || 999;
+          const value = Number(sizeControl.value);
+          size = Number.isFinite(value) ? Math.max(min, Math.min(max, value)) : min;
+        }
+        const selectedFont = fontControl && fontControl.selectedOptions[0];
+        const isScript = selectedFont && scriptFonts.indexOf(selectedFont.textContent) > -1;
+        field.style.fontFamily = font;
+        field.style.fontSize = size + "px";
+        field.style.letterSpacing = isScript ? "0.02em" : type === "name" ? "0.12em" : "normal";
+        field.style.textTransform = type === "name" && isScript ? "none" : "";
+      };
+
+      customKit.querySelectorAll("[data-preview-field]").forEach(function (field) {
+        const isNumber = field.dataset.previewField === "number";
+        const clean = function (text) {
+          return isNumber
+            ? text.replace(/\D/g, "").slice(0, 2)
+            : text.replace(/[<>]/g, "").replace(/\s+/g, " ").slice(0, 15);
+        };
+        field.addEventListener("focus", function () {
+          field.select();
+        });
+        field.addEventListener("input", function () {
+          const text = clean(field.value);
+          if (field.value !== text) field.value = text;
+        });
+      });
+
+      document.querySelectorAll("[data-preview-option]").forEach(function (control) {
+        const type = control.dataset.previewOption.split("-")[0];
+        control.addEventListener(control.tagName === "INPUT" ? "input" : "change", function () {
+          applyStyle(type);
+        });
+        if (control.tagName === "INPUT") {
+          control.addEventListener("change", function () {
+            const min = Number(control.min) || 0;
+            const max = Number(control.max) || 999;
+            const value = Number(control.value);
+            if (Number.isFinite(value)) control.value = String(Math.max(min, Math.min(max, value)));
+            applyStyle(type);
+          });
+        }
+      });
+      applyStyle("name");
+      applyStyle("number");
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(function () {
+          applyStyle("name");
+          applyStyle("number");
+        });
+      }
+    }
+  </script>
+</body>
+</html>

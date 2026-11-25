@@ -1,0 +1,134 @@
+/* ============================================
+   N-KITS - Checkout page styles
+   Linked only from checkout.html.
+   Variables come from css/styles.css.
+   ============================================ */
+
+/* ============ Checkout page ============ */
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 24px;
+  align-items: start;
+  margin-top: 20px;
+}
+@media (max-width: 860px) {
+  .checkout-layout { grid-template-columns: 1fr; }
+}
+.checkout-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px;
+  margin-bottom: 20px;
+}
+.checkout-card h2 {
+  font-size: 1.05rem;
+  margin-bottom: 16px;
+}
+.summary-items { margin-bottom: 12px; }
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 0.92rem;
+  border-bottom: 1px dashed var(--border);
+}
+.summary-name small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  margin-top: 2px;
+}
+.customize-row {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  background: var(--bg-soft, var(--surface));
+}
+.customize-product {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.customize-product small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  font-weight: 400;
+  margin-top: 2px;
+}
+.customize-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.customize-toggle input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary);
+}
+.customize-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+.customize-option {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.customize-option input[type="text"] {
+  width: 100%;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 0.9rem;
+}
+.customize-option input[type="text"]:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.customize-option input[type="text"]:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.14);
+}
+@media (max-width: 520px) {
+  .customize-options { grid-template-columns: 1fr; }
+}
+.secure-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+.secure-note svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+.field-error {
+  color: var(--danger);
+  font-size: 0.82rem;
+  margin: -6px 0 12px;
+}
+.form-hint {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  margin-top: 5px;
+}

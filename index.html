@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>N-KITS – Jerseys for Every Fan</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="js/theme.js"></script>
+  </head>
+  <body>
+    <header class="header">
+      <div class="container header-inner">
+        <a href="index.html" class="logo" aria-label="N-KITS home">
+          <img class="logo-img logo-img--light" src="assets/logo/logo-dusk-transparent.png" alt="N-KITS">
+          <img class="logo-img logo-img--dark" src="assets/logo/logo-lavender-transparent.png" alt="N-KITS">
+        </a>
+        <nav class="nav">
+          <a href="index.html" class="active">Home</a>
+          <a href="shop.html">Shop</a>
+          <a href="custom.html">Custom</a>
+        </nav>
+        <div class="header-actions">
+          <a href="cart.html" class="icon-btn" aria-label="Cart">
+            <svg viewBox="0 0 24 24">
+              <path d="M6 6h15l-1.5 9h-12z" />
+              <circle cx="9" cy="20" r="1" />
+              <circle cx="18" cy="20" r="1" />
+              <path d="M6 6L5 3H2" />
+            </svg>
+            <span class="cart-badge" style="display: none">0</span>
+          </a>
+          <a
+            href="account.html"
+            class="icon-btn"
+            data-auth
+            aria-label="Account"
+          >
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="8" r="4" />
+              <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+            </svg>
+          </a>
+          <a href="login.html" class="icon-btn" data-guest aria-label="Login">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="8" r="4" />
+              <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+            </svg>
+          </a>
+          <button type="button" class="icon-btn theme-toggle" data-theme-toggle aria-label="Switch theme" title="Switch theme">
+            <svg class="theme-icon theme-icon--sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+            <svg class="theme-icon theme-icon--moon" viewBox="0 0 24 24"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          </button>
+          <button
+            type="button"
+            class="mobile-menu-btn"
+            onclick="toggleMobileMenu()"
+            aria-label="Menu"
+          >
+            <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="mobile-nav" onclick="toggleMobileMenu()">
+      <div class="mobile-nav-inner" onclick="event.stopPropagation()">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop All</a>
+        <a href="custom.html">Custom</a>
+        <a href="cart.html">Cart</a>
+        <a href="account.html" data-auth>My Account</a>
+        <a href="login.html" data-guest>Login</a>
+      </div>
+    </div>
+
+    <section class="hero">
+      <div class="hero-scene" aria-hidden="true">
+        <div class="hero-field"></div>
+        <div class="hero-lines"></div>
+        <div class="hero-sweep"></div>
+        <svg class="hero-shape hero-jersey" viewBox="0 0 48 48">
+          <path d="M17 7h14l7 4 5 8-6 4-4-5v22H15V18l-4 5-6-4 5-8z" />
+          <path d="M19 7c1.5 3.5 8.5 3.5 10 0" />
+          <path d="M35 18l-4 3M13 18l4 3" />
+        </svg>
+        <svg class="hero-shape hero-ball" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="16" />
+          <path d="M22 13l8 6-3 10H17l-3-10z" />
+          <path d="M22 13V6M30 19l7-2M27 29l4 7M17 29l-4 7M14 19l-7-2" />
+        </svg>
+        <svg class="hero-shape hero-hoop" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="16" />
+          <path d="M8 15c9 5 19 5 28 0M6 22h32M8 29c9-5 19-5 28 0M22 6v32" />
+        </svg>
+        <span class="hero-spark hero-spark-one"></span>
+        <span class="hero-spark hero-spark-two"></span>
+        <span class="hero-spark hero-spark-three"></span>
+      </div>
+      <div class="container">
+        <div class="hero-content">
+          <h1>Every Jersey.<br />Every Game.</h1>
+          <p>
+            Club kits, national teams, and fan favorites for every sport and
+            every kind of supporter.
+          </p>
+          <div class="hero-actions">
+            <a href="shop.html" class="btn btn-primary">Shop All Jerseys</a>
+            <a href="#categories" class="btn btn-secondary">Shop by Category</a>
+          </div>
+          <div class="hero-points">
+            <span>Wide range</span>
+            <span>Custom names &amp; numbers</span>
+            <span>Fast delivery</span>
+            <span>Easy ordering</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">Shop by Category</h2>
+        <div class="categories stagger" id="categories"></div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top: 0">
+      <div class="container">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+          "
+        >
+          <h2 class="section-title" style="margin: 0">New Arrivals</h2>
+          <a href="shop.html" class="btn btn-ghost">View all →</a>
+        </div>
+        <div class="product-grid stagger" id="featured-products"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">Made for every fan</h2>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24"><path d="M5 4h14l-1 5-3 2v9H9v-9L6 9z" /></svg>
+            </div>
+            <h3>Club &amp; country</h3>
+            <p>Find jerseys for the teams you follow, from local favorites to global giants.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="M8 10h8M8 14h5"/></svg>
+            </div>
+            <h3>Make it yours</h3>
+            <p>Add your name, number, or both at checkout for ₦3,000 per jersey. <a href="custom.html">See how it works</a>.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M5 6c4 3 10 3 14 0M5 18c4-3 10-3 14 0"/></svg>
+            </div>
+            <h3>Game-day ready</h3>
+            <p>Comfortable fits and sharp details for match days, watch parties, and everyday wear.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24"><path d="M4 7h16v10H4z"/><path d="M4 7l8 6 8-6"/></svg>
+            </div>
+            <h3>Simple checkout</h3>
+            <p>Order in minutes on WhatsApp, then hear from our team.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="section"
+      style="
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+      "
+    >
+      <div class="container">
+        <div class="trust-grid">
+          <div class="trust-item">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 3l8 4v5c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V7l8-4z" />
+            </svg>
+            <h3>Everyday Quality</h3>
+            <p>Well-made jerseys for everyday fans</p>
+          </div>
+          <div class="trust-item">
+            <svg viewBox="0 0 24 24">
+              <rect x="1" y="3" width="15" height="13" rx="1" />
+              <path d="M16 8h4l3 5v3h-7V8z" />
+              <circle cx="5.5" cy="18.5" r="2.5" />
+              <circle cx="18.5" cy="18.5" r="2.5" />
+            </svg>
+            <h3>Nationwide Delivery</h3>
+            <p>Fast shipping across Nigeria</p>
+          </div>
+          <div class="trust-item">
+            <svg viewBox="0 0 24 24">
+              <path d="M3 12a9 9 0 1 0 9-9" />
+              <path d="M3 12h6" />
+              <path d="M12 3v6" />
+            </svg>
+            <h3>Easy Returns</h3>
+            <p>7-day return policy</p>
+          </div>
+          <div class="trust-item">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+              />
+            </svg>
+            <h3>WhatsApp Support</h3>
+            <p>Talk to us anytime</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="cta-band">
+          <div>
+            <h2>Find your next jersey</h2>
+            <p>New arrivals, team favorites, custom names and numbers, and everyday essentials are all in one place.</p>
+          </div>
+          <a href="shop.html" class="btn btn-primary">Browse Jerseys</a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-bottom">
+          <span>© 2026 N-KITS</span>
+          <span>Made for jersey lovers</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/data.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/pages/index.js"></script>
+  </body>
+</html>
