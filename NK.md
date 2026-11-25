@@ -756,3 +756,11 @@ These were found during exploration. Do not fix them without explicit user instr
 - Why: the user wants customers to track previous orders directly from the cart and see a prominent tracking button in every storefront footer.
 - Files changed: `index.html`, `shop.html`, `product.html`, `custom.html`, `cart.html`, `checkout.html`, `order-sent.html`, `track.html`, `css/styles.css`, `NK.md`.
 - Verification: CSS brace count matched; all 8 public HTML files passed tag-pair checks and contained the footer tracking button; grep confirmed no plain footer tracking links remain and admin has no tracking footer; `git diff --check` passed.
+
+### 2026-11-25 — Home footer alignment and larger desktop nav
+
+- Changed: the home footer now groups `Made for jersey lovers` with the `Track order` button on the right, leaving the copyright on the left.
+- Changed: desktop navigation links now use `1.05rem` instead of `0.9rem` at `768px` and above.
+- Why: the user wants the home footer tracking button moved right and the large-screen nav font enlarged.
+- Files changed: `index.html`, `css/styles.css`, `NK.md`.
+- Verification: CSS brace count matched; `index.html` tag pairing passed; grep confirmed the home footer uses `.footer-right`; `git diff --check` passed.

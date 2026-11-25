@@ -1953,6 +1953,13 @@ html[data-theme="dark"] .theme-icon--sun {
   gap: 8px;
 }
 
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 /* WhatsApp button */
 .wa-fab {
   position: fixed;
@@ -2069,6 +2076,9 @@ html[data-theme="dark"] .theme-icon--sun {
 @media (min-width: 768px) {
   .nav {
     display: flex;
+  }
+  .nav a {
+    font-size: 1.05rem;
   }
   .mobile-menu-btn {
     display: none;
