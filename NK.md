@@ -206,7 +206,7 @@ Remote reads query categories, products, settings, and latest 200 orders in para
 - Customer auth is removed entirely; checkout is guest-only.
 - `js/auth.js` is admin-only: Supabase password login via `Store.supabase()`, session restore, and `retrokit_admin_user`.
 - Admin access:
-  - Supabase mode checks current user and `profiles.is_admin` (`js/admin.js:138-152`).
+  - Supabase mode trusts `app_metadata.is_admin` from the session, then falls back to `profiles.is_admin` (`js/auth.js:4-11`, `js/admin.js:138-152`).
   - Local mode checks SHA-256 hash and `sessionStorage.retrokit_admin` (`js/admin.js:154-165`, `js/admin.js:206-249`).
 - Storefront HTML no longer uses `[data-auth]`, `[data-guest]`, or `[data-user-name]` hooks.
 
@@ -227,8 +227,9 @@ Remote reads query categories, products, settings, and latest 200 orders in para
 
 - Supabase URL and anon/public key are configured in `js/config.js:12-13`; Supabase CLI project ID is `rkhvgijdsvwtujbqangw` in `supabase/config.toml`.
 - New Supabase project is reachable; the user ran `supabase/schema.sql`, and `track_order` RPC returns HTTP 200 with `[]`.
-- First schema run lacked explicit table grants, so anon reads returned HTTP 401; `supabase/schema.sql` now grants public reads and must be re-run in SQL Editor.
-- Production domain is intentionally unset pending user input; admin email is pending user input for `profiles.is_admin`.
+- First schema run lacked explicit table grants; the user re-ran the updated schema and anon reads were verified working.
+- Production domain is intentionally unset pending user input; admin user `anahboniface2017@gmail.com` was created and promoted via Supabase Auth `app_metadata.is_admin`.
+- Service role key was used transiently and must be rotated because it was shared in chat; it was not written to any repo file.
 - Default WhatsApp number is sample value `2348012345678`: `js/config.js:30` and `supabase/schema.sql` settings seed.
 - Local admin hash is committed in `js/config.js:27`; replacement instructions are in `js/config.js:18-26`.
 - Image upload requires Supabase.
@@ -662,3 +663,11 @@ These were found during exploration. Do not fix them without explicit user instr
 - Why: the user ran the schema, `track_order` RPC worked, but anon REST reads returned HTTP 42501 `permission denied` because the fresh project had no explicit table grants.
 - Files changed: `supabase/schema.sql`, `NK.md`.
 - Verification: `track_order` RPC probe returned HTTP 200 with `[]`; `settings` probe returned HTTP 42501 with hint `GRANT SELECT ON public.settings TO anon;`; updated schema now includes the missing grants and needs to be re-run in SQL Editor.
+
+### 2026-11-25 — Supabase admin user and app_metadata admin flag
+
+- Changed: created Supabase Auth user `anahboniface2017@gmail.com` and set `app_metadata.is_admin = true`.
+- Changed: `js/auth.js` now includes `isAdmin` from `app_metadata` in the cached session user; `js/admin.js` trusts that flag before falling back to `profiles.is_admin`.
+- Why: the service role key lacked table grants for a direct `profiles` update, and the user supplied the admin email/password; app_metadata avoids another SQL-editor step.
+- Files changed: `js/auth.js`, `js/admin.js`, `NK.md`; no secrets or passwords were written to repo files.
+- Verification: Admin API create returned user `33028e8b-f2ec-4b69-859c-e6c602323148`; Admin API update returned `is_admin=True`; password login returned an access token with `app_metadata.is_admin=True`; service role key must be rotated because it was shared in chat.

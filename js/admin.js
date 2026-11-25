@@ -139,6 +139,7 @@
     const sb = Store.supabase();
     const user = getCurrentUser();
     if (!sb || !user) return false;
+    if (user.isAdmin) return true;
     try {
       const { data, error } = await sb.from("profiles").select("is_admin").eq("id", user.id).maybeSingle();
       if (error) {

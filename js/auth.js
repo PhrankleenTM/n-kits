@@ -6,7 +6,8 @@ function userFromSession(user) {
   return {
     id: user.id,
     name: meta.name || meta.full_name || (user.email || "").split("@")[0],
-    email: user.email || ""
+    email: user.email || "",
+    isAdmin: Boolean(user.app_metadata && user.app_metadata.is_admin === true)
   };
 }
 
