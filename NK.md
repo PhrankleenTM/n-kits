@@ -722,3 +722,10 @@ These were found during exploration. Do not fix them without explicit user instr
 - Why: the user wants professional on-page SEO and no visible `.html` endings in site links.
 - Files changed: `vercel.json`, `robots.txt`, all 9 HTML pages, `js/app.js`, `js/cart.js`, `js/admin.js`, `js/pages/index.js`, `js/pages/cart.js`, `js/pages/order-sent.js`, `js/pages/product.js`, `NK.md`.
 - Verification: `node --check` passed for all changed JS; `vercel.json` parsed with `JSON.parse`; all 9 HTML files passed tag-pair checks, contained the required SEO tags, and had parseable JSON-LD; grep found no stale internal `.html` links; `git diff --check` passed.
+
+### 2026-11-25 — Raise WhatsApp button again
+
+- Changed: WhatsApp floating button bottom offset raised from 28px to 36px on desktop and from 22px to 30px on small screens.
+- Why: the user asked to bring the WhatsApp icon up a bit more.
+- Files changed: `css/styles.css`, `NK.md`.
+- Verification: CSS brace count matched; `git diff --check` passed.
