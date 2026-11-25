@@ -1,164 +1,225 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Browse club, country, and fan-favorite retro jerseys. Filter by type and price to find your kit.">
-  <meta name="keywords" content="shop football jerseys, retro jerseys, Premier League jerseys, La Liga jerseys, Serie A jerseys, international jerseys">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="/shop">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="N-KITS">
-  <meta property="og:title" content="Shop Jerseys – N-KITS">
-  <meta property="og:description" content="Browse club, country, and fan-favorite retro jerseys. Filter by type and price to find your kit.">
-  <meta property="og:url" content="/shop">
-  <meta property="og:image" content="/assets/logo/logo-dusk-transparent.png">
-  <meta property="og:image:alt" content="N-KITS">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:url" content="/shop">
-  <meta name="twitter:title" content="Shop Jerseys – N-KITS">
-  <meta name="twitter:description" content="Browse club, country, and fan-favorite retro jerseys. Filter by type and price to find your kit.">
-  <meta name="twitter:image" content="/assets/logo/logo-dusk-transparent.png">
-  <meta name="theme-color" content="#2E2A4A">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Browse club, country, and fan-favorite retro jerseys. Filter by type and price to find your kit."
+    />
+    <meta
+      name="keywords"
+      content="shop football jerseys, retro jerseys, Premier League jerseys, La Liga jerseys, Serie A jerseys, international jerseys"
+    />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="/shop" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="N-KITS" />
+    <meta property="og:title" content="Shop Jerseys – N-KITS" />
+    <meta
+      property="og:description"
+      content="Browse club, country, and fan-favorite retro jerseys. Filter by type and price to find your kit."
+    />
+    <meta property="og:url" content="/shop" />
+    <meta
+      property="og:image"
+      content="/assets/logo/logo-dusk-transparent.png"
+    />
+    <meta property="og:image:alt" content="N-KITS" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="/shop" />
+    <meta name="twitter:title" content="Shop Jerseys – N-KITS" />
+    <meta
+      name="twitter:description"
+      content="Browse club, country, and fan-favorite retro jerseys. Filter by type and price to find your kit."
+    />
+    <meta
+      name="twitter:image"
+      content="/assets/logo/logo-dusk-transparent.png"
+    />
+    <meta name="theme-color" content="#2E2A4A" />
+    <script type="application/ld+json">
       {
-        "@type": "Organization",
-        "@id": "/#organization",
-        "name": "N-KITS",
-        "description": "Retro football jerseys for club and country, with custom names and numbers."
-      },
-      {
-        "@type": "WebSite",
-        "@id": "/#website",
-        "url": "/",
-        "name": "N-KITS",
-        "publisher": { "@id": "/#organization" }
-      },
-      {
-        "@type": "WebPage",
-        "@id": "/shop#webpage",
-        "url": "/shop",
-        "name": "Shop Jerseys – N-KITS",
-        "isPartOf": { "@id": "/#website" }
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "/#organization",
+            "name": "N-KITS",
+            "description": "Retro football jerseys for club and country, with custom names and numbers."
+          },
+          {
+            "@type": "WebSite",
+            "@id": "/#website",
+            "url": "/",
+            "name": "N-KITS",
+            "publisher": { "@id": "/#organization" }
+          },
+          {
+            "@type": "WebPage",
+            "@id": "/shop#webpage",
+            "url": "/shop",
+            "name": "Shop Jerseys – N-KITS",
+            "isPartOf": { "@id": "/#website" }
+          }
+        ]
       }
-    ]
-  }
-  </script>
-  <title>Shop Jerseys – N-KITS</title>
-  <link rel="stylesheet" href="css/styles.css">
-  <script src="js/theme.js"></script>
-</head>
-<body>
-  <header class="header">
-    <div class="container header-inner">
-      <a href="/" class="logo" aria-label="N-KITS home">
-        <img class="logo-img logo-img--light" src="assets/logo/logo-dusk-transparent.png" alt="N-KITS">
-        <img class="logo-img logo-img--dark" src="assets/logo/logo-lavender-transparent.png" alt="N-KITS">
-      </a>
+    </script>
+    <title>Shop Jerseys – N-KITS</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="js/theme.js"></script>
+  </head>
+  <body>
+    <header class="header">
+      <div class="container header-inner">
+        <a href="/" class="logo" aria-label="N-KITS home">
+          <img
+            class="logo-img logo-img--light"
+            src="assets/logo/logo-dusk-transparent.png"
+            alt="N-KITS"
+          />
+          <img
+            class="logo-img logo-img--dark"
+            src="assets/logo/logo-lavender-transparent.png"
+            alt="N-KITS"
+          />
+        </a>
         <nav class="nav">
           <a href="/">Home</a>
           <a href="/shop" class="active">Shop</a>
           <a href="/custom">Custom</a>
         </nav>
-      <div class="header-actions">
-        <a href="/cart" class="icon-btn" aria-label="Cart">
-          <svg viewBox="0 0 24 24"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M6 6L5 3H2"/></svg>
-          <span class="cart-badge" style="display:none">0</span>
-        </a>
-        <button type="button" class="icon-btn theme-toggle" data-theme-toggle aria-label="Switch theme" title="Switch theme">
-          <svg class="theme-icon theme-icon--sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
-          <svg class="theme-icon theme-icon--moon" viewBox="0 0 24 24"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-        </button>
-        <button type="button" class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu">
-          <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-        </button>
+        <div class="header-actions">
+          <a href="/cart" class="icon-btn" aria-label="Cart">
+            <svg viewBox="0 0 24 24">
+              <path d="M6 6h15l-1.5 9h-12z" />
+              <circle cx="9" cy="20" r="1" />
+              <circle cx="18" cy="20" r="1" />
+              <path d="M6 6L5 3H2" />
+            </svg>
+            <span class="cart-badge" style="display: none">0</span>
+          </a>
+          <button
+            type="button"
+            class="icon-btn theme-toggle"
+            data-theme-toggle
+            aria-label="Switch theme"
+            title="Switch theme"
+          >
+            <svg class="theme-icon theme-icon--sun" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="4" />
+              <path
+                d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+              />
+            </svg>
+            <svg class="theme-icon theme-icon--moon" viewBox="0 0 24 24">
+              <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="mobile-menu-btn"
+            onclick="toggleMobileMenu()"
+            aria-label="Menu"
+          >
+            <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+          </button>
+        </div>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <div class="mobile-nav" onclick="toggleMobileMenu()">
-    <div class="mobile-nav-inner" onclick="event.stopPropagation()">
+    <div class="mobile-nav" onclick="toggleMobileMenu()">
+      <div class="mobile-nav-inner" onclick="event.stopPropagation()">
         <a href="/">Home</a>
         <a href="/shop">Shop All</a>
         <a href="/custom">Custom</a>
         <a href="/cart">Cart</a>
-      <a href="/track">Track order</a>
-    </div>
-  </div>
-
-  <main class="section">
-    <div class="container">
-      <button type="button" class="back-btn" onclick="goBack('/')">
-        <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
-        Back
-      </button>
-
-      <div id="custom-banner" class="custom-banner" hidden>
-        <div>
-          <strong>Custom jerseys</strong>
-          <span>Pick a jersey, then add a name, a number, or both at checkout.</span>
-        </div>
-        <span class="custom-fee" id="custom-fee-label"></span>
-      </div>
-
-      <h1 class="section-title">All jerseys</h1>
-      <p class="text-muted" style="margin-bottom: 24px">Browse club, country, and fan-favorite kits. Filter by category or price to find your fit.</p>
-
-      <div class="shop-layout">
-        <div class="mobile-filters">
-          <div class="mobile-filter">
-            <label for="cat-select">Type</label>
-            <select id="cat-select" onchange="setCategory(this.value)"></select>
-          </div>
-          <div class="mobile-filter">
-            <label for="price-select">Price</label>
-            <select id="price-select" onchange="setPrice(this.value)"></select>
-          </div>
-        </div>
-
-        <aside class="filters">
-          <div class="filter-group">
-            <h3>Category</h3>
-            <div id="cat-filters"></div>
-          </div>
-          <div class="filter-group">
-            <h3>Price</h3>
-            <div id="price-filters"></div>
-          </div>
-        </aside>
-
-        <div>
-          <div class="shop-header">
-            <select class="sort-select" id="sort" onchange="applyFilters()">
-              <option value="newest">Newest</option>
-              <option value="price-asc">Price: Low to High</option>
-              <option value="price-desc">Price: High to Low</option>
-            </select>
-          </div>
-          <div class="product-grid" id="shop-products"></div>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-bottom">
-        <span>© 2026 N-KITS</span>
         <a href="/track">Track order</a>
       </div>
     </div>
-  </footer>
 
-  <script src="js/config.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/data.js"></script>
-  <script src="js/store.js"></script>
-  <script src="js/cart.js"></script>
-  <script src="js/app.js"></script>
-  <script src="js/pages/shop.js"></script>
-</body>
+    <main class="section">
+      <div class="container">
+        <button type="button" class="back-btn" onclick="goBack('/')">
+          <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" /></svg>
+          Back
+        </button>
+
+        <div id="custom-banner" class="custom-banner" hidden>
+          <div>
+            <strong>Custom jerseys</strong>
+            <span
+              >Pick a jersey, then add a name, a number, or both at
+              checkout.</span
+            >
+          </div>
+          <span class="custom-fee" id="custom-fee-label"></span>
+        </div>
+
+        <h1 class="section-title">All jerseys</h1>
+        <p class="text-muted" style="margin-bottom: 24px">
+          Browse club, country, and fan-favorite kits. Filter by category or
+          price to find your fit.
+        </p>
+
+        <div class="shop-layout">
+          <div class="mobile-filters">
+            <div class="mobile-filter">
+              <label for="cat-select">Type</label>
+              <select
+                id="cat-select"
+                onchange="setCategory(this.value)"
+              ></select>
+            </div>
+            <div class="mobile-filter">
+              <label for="price-select">Price</label>
+              <select
+                id="price-select"
+                onchange="setPrice(this.value)"
+              ></select>
+            </div>
+          </div>
+
+          <aside class="filters">
+            <div class="filter-group">
+              <h3>Category</h3>
+              <div id="cat-filters"></div>
+            </div>
+            <div class="filter-group">
+              <h3>Price</h3>
+              <div id="price-filters"></div>
+            </div>
+          </aside>
+
+          <div>
+            <div class="shop-header">
+              <select class="sort-select" id="sort" onchange="applyFilters()">
+                <option value="newest">Newest</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+              </select>
+            </div>
+            <div class="product-grid" id="shop-products"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-bottom">
+          <span>© 2026 N-KITS</span>
+          <a href="/track">Track order</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/data.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/pages/shop.js"></script>
+  </body>
 </html>

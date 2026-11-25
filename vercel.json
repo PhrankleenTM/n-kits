@@ -6,8 +6,16 @@
     { "source": "/product.html", "destination": "/product", "permanent": true },
     { "source": "/custom.html", "destination": "/custom", "permanent": true },
     { "source": "/cart.html", "destination": "/cart", "permanent": true },
-    { "source": "/checkout.html", "destination": "/checkout", "permanent": true },
-    { "source": "/order-sent.html", "destination": "/order-sent", "permanent": true },
+    {
+      "source": "/checkout.html",
+      "destination": "/checkout",
+      "permanent": true
+    },
+    {
+      "source": "/order-sent.html",
+      "destination": "/order-sent",
+      "permanent": true
+    },
     { "source": "/track.html", "destination": "/track", "permanent": true },
     { "source": "/admin.html", "destination": "/admin", "permanent": true }
   ],
