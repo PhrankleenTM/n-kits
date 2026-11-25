@@ -199,7 +199,7 @@ Remote reads query categories, products, settings, and latest 200 orders in para
 - Guest tracking lives at `track.html`; require order number plus the WhatsApp phone or email used at checkout.
 - Remote tracking calls `public.track_order(order_id, match, client_key)` so anon clients cannot scan all orders; local mode matches against cached `Store.orders`.
 - Rate limits: 5 attempts per 10 minutes in-browser and server-side by hashed IP/client key; successful lookup clears the browser limit.
-- Storefront footer and mobile nav link to `track.html`; `order-sent.html` adds `Track this order` with `?order=<id>`.
+- Storefront footer uses a `Track order` button on every public page; mobile nav keeps plain links, `cart.html` has a tracking strip, and `order-sent.html` adds `Track this order` with `?order=<id>`. Admin has no tracking footer.
 
 ## Auth
 
@@ -748,3 +748,11 @@ These were found during exploration. Do not fix them without explicit user instr
 - Why: the user does not want purchased jerseys to remain in the cart after checkout.
 - Files changed: `js/cart.js`, `NK.md`.
 - Verification: `node --check js/cart.js` passed; grep confirmed `clearCart()` is called in `sendWhatsAppOrder()`; `git diff --check` passed.
+
+### 2026-11-25 — Cart tracking strip and footer tracking buttons
+
+- Changed: added a `Track order` strip above the cart contents with a button linking to `/track`.
+- Changed: every public footer now renders `Track order` as a `btn btn-secondary btn-sm` button; admin is unchanged because it has no storefront footer.
+- Why: the user wants customers to track previous orders directly from the cart and see a prominent tracking button in every storefront footer.
+- Files changed: `index.html`, `shop.html`, `product.html`, `custom.html`, `cart.html`, `checkout.html`, `order-sent.html`, `track.html`, `css/styles.css`, `NK.md`.
+- Verification: CSS brace count matched; all 8 public HTML files passed tag-pair checks and contained the footer tracking button; grep confirmed no plain footer tracking links remain and admin has no tracking footer; `git diff --check` passed.
