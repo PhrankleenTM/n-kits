@@ -611,3 +611,11 @@ These were found during exploration. Do not fix them without explicit user instr
 - Why: user said Paystack is being scrapped entirely and orders are strictly on WhatsApp.
 - Files changed: `checkout.html`, `js/pages/checkout.js`, `js/config.js`, `js/store.js`, `js/admin.js`, `js/pages/account.js`, `index.html`, `custom.html`, `css/checkout.css`, `supabase/schema.sql`, `supabase/config.toml`, `NK.md`; deleted `supabase/functions/paystack/index.ts`.
 - Verification: `node --check` passed on all changed JS; CSS brace counts matched `css/styles.css 381/381`, `css/admin.css 143/143`, and `css/checkout.css 24/24`; grep found no Paystack/card-payment references in application files; `supabase/functions/**` no longer contains files.
+
+### 2026-11-25 — Cart WhatsApp CTA
+
+- Changed: cart summary now has one primary `Order on WhatsApp` button that calls `placeOrderOnWhatsApp()`.
+- Changed: removed the `Proceed to Checkout` link and the separate `Order on WhatsApp instead` button.
+- Why: user wanted only one checkout/order CTA on the cart page, labeled `Order on WhatsApp`.
+- Files changed: `js/pages/cart.js`, `NK.md`.
+- Verification: `node --check js/pages/cart.js` passed; grep confirmed the old CTA labels are gone and the new WhatsApp CTA is present.
