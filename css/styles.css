@@ -1349,12 +1349,6 @@ html[data-theme="dark"] .theme-icon--sun {
   font-weight: 600;
 }
 
-.category-price {
-  margin-top: 6px;
-  font-size: 0.78rem;
-  color: var(--text-muted);
-}
-
 /* Product grid */
 .product-grid {
   display: grid;
@@ -1935,7 +1929,7 @@ html[data-theme="dark"] .theme-icon--sun {
 .wa-fab {
   position: fixed;
   right: 20px;
-  bottom: 20px;
+  bottom: 28px;
   z-index: 120;
   width: 54px;
   height: 54px;
@@ -1964,7 +1958,7 @@ html[data-theme="dark"] .theme-icon--sun {
 @media (max-width: 520px) {
   .wa-fab {
     right: 14px;
-    bottom: 14px;
+    bottom: 22px;
     width: 48px;
     height: 48px;
   }
