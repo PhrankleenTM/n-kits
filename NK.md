@@ -64,20 +64,17 @@ Core capabilities as written:
 - `product.html`: product detail driven by `?id=`.
 - `cart.html`: cart view and WhatsApp checkout entry.
 - `checkout.html`: contact/delivery form, per-jersey customization, order summary, and WhatsApp CTA.
-- `order-sent.html`: WhatsApp return/confirmation page with order summary and cart-clearing confirmation button.
-- `login.html`: login and password-reset request.
-- `register.html`: registration.
-- `verify.html`: OTP verification and password reset entry.
-- `account.html`: current user's recent orders and cart summary.
+- `order-sent.html`: WhatsApp return/confirmation page with session-backed order summary, cart-clearing confirmation button, and tracking link.
+- `track.html`: guest order lookup by order number plus phone/email, with order status/items and WhatsApp help link.
 - `admin.html`: admin SPA shell, login gate, hash-router view container.
 
 ### Shared browser JavaScript
 
 - `js/config.js`: Supabase constants, storage bucket, local admin hash, default WhatsApp number.
 - `js/data.js`: seeded demo products/categories and price helpers.
-- `js/store.js`: main data layer for local/remote products, categories, settings, orders, and uploads.
-- `js/auth.js`: local/Supabase auth, OTP, password reset, auth UI toggling.
-- `js/cart.js`: cart state, totals, WhatsApp message/payload, toast helper.
+- `js/store.js`: main data layer for local/remote products, categories, settings, orders, guest order tracking, and uploads.
+- `js/auth.js`: admin-only Supabase/local session helper, password login, no customer auth.
+- `js/cart.js`: cart state, totals, WhatsApp message/payload, session snapshot, toast helper.
 - `js/app.js`: shared product cards, product rendering, mobile menu, scroll reveal.
 - `js/admin.js`: admin access control, hash router, CRUD screens, settings, local SHA-256.
 - `js/theme.js`: light/dark mode state, system preference, saved choice, toggle wiring.
@@ -98,15 +95,12 @@ Core capabilities as written:
 - `js/pages/product.js`: product detail, gallery, size and quantity controls.
 - `js/pages/cart.js`: cart rows and quantity/remove controls.
 - `js/pages/checkout.js`: checkout form, per-jersey customization, order summary, and WhatsApp order submission.
-- `js/pages/order-sent.js`: WhatsApp return order lookup, summary rendering, and confirmation button.
-- `js/pages/login.js`: login form.
-- `js/pages/register.js`: registration form.
-- `js/pages/verify.js`: OTP/resend/new-password flow.
-- `js/pages/account.js`: recent orders from cached `Store.orders`.
+- `js/pages/order-sent.js`: WhatsApp return confirmation button, session-snapshot summary rendering, and tracking link prefill.
+- `js/pages/track.js`: guest tracking form, client attempt limit, RPC/local lookup, and result rendering.
 
 ### CSS
 
-- `css/styles.css`: light/dark theme variables, storefront, animated sports hero, category logo/flag icons, feature/CTA sections, auth, cart, product, WhatsApp button, Custom page, order-sent confirmation, toast, responsive rules.
+- `css/styles.css`: light/dark theme variables, storefront, animated sports hero, category logo/flag icons, feature/CTA sections, shared admin auth card, cart, product, WhatsApp button, Custom page, order-sent confirmation, guest tracking, toast, responsive rules.
 - `css/checkout.css`: checkout layout, customization rows, summary, and form hints using theme variables.
 - `css/admin.css`: admin shell, tables, forms, image manager, orders and payment-status controls using theme variables.
 
@@ -130,7 +124,7 @@ Core capabilities as written:
 Boot flow:
 
 - `Store` is created in `js/store.js:10`.
-- `auth.js` starts session hydration immediately in `js/auth.js:22-44`.
+- `auth.js` starts admin session hydration immediately in `js/auth.js:17-27`.
 - Storefront pages call `Store.ready()` (`js/store.js:235-243`).
 - `Store.load()` selects local or remote mode (`js/store.js:221-233`).
 - `syncGlobals()` reassigns global `PRODUCTS` and `CATEGORIES` (`js/store.js:69-72`).
@@ -192,51 +186,63 @@ Important functions:
 - product CRUD: `js/store.js:247-296`
 - category CRUD: `js/store.js:300-357`
 - settings and WhatsApp helpers: `js/store.js:361-387`
-- order CRUD: `js/store.js:391-464`
-- image upload: `js/store.js:500-517`
+- order CRUD and guest tracking: `js/store.js` `createOrder`, `updateOrder`, `deleteOrder`, `getOrders`, `trackOrder`
+- image upload: `js/store.js` `uploadImage`
 
-Remote reads query categories, products, settings, and latest 200 orders in parallel (`js/store.js:186-193`).
+Remote reads query categories, products, settings, and latest 200 orders in parallel in `Store.loadRemote()`. Guest tracking uses the `track_order` RPC in remote mode and cached `Store.orders` in local mode.
 
 ## Checkout and Order Records
 
 - Checkout is WhatsApp-only: `js/pages/checkout.js` validates contact/delivery fields and per-jersey customization, then calls `sendWhatsAppOrder()` in `js/cart.js`.
 - `sendWhatsAppOrder()` opens WhatsApp synchronously, saves the order with `payment_channel: "whatsapp"` and `payment_status: "unpaid"`, then redirects to `order-sent.html?order=<id>`.
 - `order-sent.html` and `js/pages/order-sent.js` render the saved order and clear the cart only after `I've sent the message`; admin can change `payment_status` from the order card for manual records.
+- Guest tracking lives at `track.html`; require order number plus the WhatsApp phone or email used at checkout.
+- Remote tracking calls `public.track_order(order_id, match, client_key)` so anon clients cannot scan all orders; local mode matches against cached `Store.orders`.
+- Rate limits: 5 attempts per 10 minutes in-browser and server-side by hashed IP/client key; successful lookup clears the browser limit.
+- Storefront footer and mobile nav link to `track.html`; `order-sent.html` adds `Track this order` with `?order=<id>`.
 
 ## Auth
 
-- Supabase auth functions are in `js/auth.js`.
-- Local auth stores users in `localStorage`; passwords are plaintext (`js/auth.js:90-119`).
+- Customer auth is removed entirely; checkout is guest-only.
+- `js/auth.js` is admin-only: Supabase password login via `Store.supabase()`, session restore, and `retrokit_admin_user`.
 - Admin access:
   - Supabase mode checks current user and `profiles.is_admin` (`js/admin.js:138-152`).
   - Local mode checks SHA-256 hash and `sessionStorage.retrokit_admin` (`js/admin.js:154-165`, `js/admin.js:206-249`).
-- `updateAuthUI()` toggles `[data-auth]`, `[data-guest]`, and `[data-user-name]` (`js/auth.js:223-234`).
+- Storefront HTML no longer uses `[data-auth]`, `[data-guest]`, or `[data-user-name]` hooks.
 
 ## Database
 
-- Tables in `supabase/schema.sql`: `profiles`, `categories`, `products`, `settings`, `orders`.
-- RLS enabled in `supabase/schema.sql:203-207`.
+- Tables in `supabase/schema.sql`: `profiles`, `categories`, `products`, `settings`, `orders`, `order_track_attempts`.
+- RLS enabled for all tables in `supabase/schema.sql`; `order_track_attempts` has no direct anon/authenticated grants.
+- `public.track_order(bigint, text, text)` is a SECURITY DEFINER RPC granted to `anon`/`authenticated` for guest tracking.
 - Public read policies for categories/products/settings.
-- Public order insert; own/admin read; admin update/delete.
+- Public order insert; admin-only order read/update/delete.
+- Admin profile self-read/admin read-all; no customer profile update policy.
+- `orders.user_id` is removed and an idempotent drop migration is included.
 - Public storage bucket: `product-images`.
-- Seed data: categories/settings in `supabase/schema.sql:337-357`; 12 products in `supabase/schema.sql:359-420`.
-- Admin grant instructions in `supabase/schema.sql:422-438`.
+- Seed data: categories/settings in `supabase/schema.sql:382-402`; 12 products in `supabase/schema.sql:404-466`.
+- Admin grant instructions in `supabase/schema.sql:468-...`.
 
 ## Configuration Status
 
-- Supabase URL/anon key are placeholders: `js/config.js:12-13`.
+- Supabase URL and anon/public key are configured in `js/config.js:12-13`; Supabase CLI project ID is `rkhvgijdsvwtujbqangw` in `supabase/config.toml`.
+- New Supabase project is reachable; the user ran `supabase/schema.sql`, and `track_order` RPC returns HTTP 200 with `[]`.
+- First schema run lacked explicit table grants, so anon reads returned HTTP 401; `supabase/schema.sql` now grants public reads and must be re-run in SQL Editor.
+- Production domain is intentionally unset pending user input; admin email is pending user input for `profiles.is_admin`.
 - Default WhatsApp number is sample value `2348012345678`: `js/config.js:30` and `supabase/schema.sql` settings seed.
 - Local admin hash is committed in `js/config.js:27`; replacement instructions are in `js/config.js:18-26`.
 - Image upload requires Supabase.
-- OTP verification is unavailable in local mode (`verify.html:19-27`, `js/auth.js:126-184`).
-- Supabase password reset redirect is hard-coded to `/verify.html?type=recovery` (`js/auth.js:186-188`).
+- Guest tracking requires the `track_order` RPC from `supabase/schema.sql` to be applied; local mode still works from cached orders.
+- No customer email/SMTP/OTP or Supabase auth redirect URLs are required; admin login uses Supabase Auth email/password.
+- If admin email confirmation or password reset is enabled, configure Supabase Auth SMTP/redirects manually; otherwise create/confirm the admin user in the Supabase dashboard.
+- Supabase free projects pause after ~7 days of inactivity; a daily REST ping using anon/publishable key can prevent this, but GitHub scheduled workflows can be disabled after repo inactivity and an external monitor is more reliable; paid plans avoid the tradeoff.
 
 ## Setup Commands Documented in Source
 
 - Generate local admin hash:
   `node -e "console.log(require('crypto').createHash('sha256').update('YOUR PASSWORD').digest('hex'))"`
-- Apply schema manually in Supabase SQL Editor from `supabase/schema.sql`.
-- Configure Supabase Auth email/SMTP manually.
+- Apply schema manually in Supabase SQL Editor from `supabase/schema.sql`; this creates the guest-tracking RPC and rate-limit table.
+- Create admin user in Supabase Dashboard -> Authentication -> Users, then run the `GRANT ADMIN` statement in `supabase/schema.sql`.
 
 No install/dev/build/test/lint/typecheck/format commands are defined.
 
@@ -256,8 +262,8 @@ No install/dev/build/test/lint/typecheck/format commands are defined.
 
 These were found during exploration. Do not fix them without explicit user instruction.
 
-- Storefront generated HTML lacks consistent escaping: `js/app.js:5-26`, `js/pages/index.js:2-8`, `js/pages/shop.js:5-10`, `js/pages/product.js:21-56`, `js/pages/cart.js:18-32`, `js/pages/checkout.js:16-24`, `js/pages/account.js:10-23`.
-- Local auth stores plaintext passwords: `js/auth.js:90-119`.
+- Storefront generated HTML lacks consistent escaping: `js/app.js:5-26`, `js/pages/index.js:2-8`, `js/pages/shop.js:5-10`, `js/pages/product.js:21-56`, `js/pages/cart.js:18-32`, `js/pages/checkout.js:16-24`.
+- Admin-only auth cache uses `localStorage.retrokit_admin_user`; treat it as a convenience cache, not a security boundary: `js/auth.js:33-49`.
 - Local admin gate is weak by design: `js/config.js:18-27`, `js/admin.js:154-165`.
 - Configured-but-unreachable Supabase may lock admin out: `js/admin.js` boot/admin access paths.
 - Remote settings/order read failures are ignored: `js/store.js:187`, `js/store.js:195`.
@@ -619,3 +625,40 @@ These were found during exploration. Do not fix them without explicit user instr
 - Why: user wanted only one checkout/order CTA on the cart page, labeled `Order on WhatsApp`.
 - Files changed: `js/pages/cart.js`, `NK.md`.
 - Verification: `node --check js/pages/cart.js` passed; grep confirmed the old CTA labels are gone and the new WhatsApp CTA is present.
+
+### 2026-11-25 — Guest checkout and admin-only auth cleanup
+
+- Changed: removed all customer auth pages, scripts, nav links, script includes, OTP CSS, account CSS, and customer profile/order RLS assumptions.
+- Changed: `js/auth.js` is now admin-only and uses `retrokit_admin_user`; `js/admin.js` keeps Supabase/local admin login and now points admin creation to the Supabase dashboard.
+- Changed: `js/cart.js` builds guest WhatsApp messages/payloads without `user_id` and saves `retrokit_last_wa_order_snapshot`; `js/pages/order-sent.js` renders from that snapshot.
+- Changed: cart `Order on WhatsApp` now links to `checkout.html` so guest contact/delivery/customization details are collected before sending; checkout no longer waits for auth or prefills a user.
+- Changed: `js/store.js` no longer maps/creates `user_id`; `supabase/schema.sql` drops `orders.user_id`, removes customer order/profile policies, and documents admin-only setup.
+- Why: user said authentication is being removed entirely and only admin login should remain; customers must be able to order as guests.
+- Files changed: `js/auth.js`, `js/cart.js`, `js/admin.js`, `js/store.js`, `js/pages/cart.js`, `js/pages/checkout.js`, `js/pages/order-sent.js`, `index.html`, `shop.html`, `product.html`, `cart.html`, `checkout.html`, `custom.html`, `order-sent.html`, `admin.html`, `css/styles.css`, `supabase/schema.sql`, `NK.md`; deleted `login.html`, `register.html`, `verify.html`, `account.html`, `js/pages/login.js`, `js/pages/register.js`, `js/pages/verify.js`, `js/pages/account.js`.
+- Verification: `node --check` passed on all changed JS; CSS brace counts matched `css/styles.css 344/344`, `css/admin.css 143/143`, and `css/checkout.css 24/24`; inline-script parse and tag-pair checks passed on all HTML entry points; grep found no customer-auth references in application files, no Paystack references in application files, and only admin `getCurrentUser()`/`authReady()` plus the `orders.user_id` drop migration remain.
+
+### 2026-11-25 — Guest order tracking
+
+- Changed: added `track.html` and `js/pages/track.js` so guests can look up an order by order number plus the WhatsApp phone or email used at checkout.
+- Changed: added `Store.trackOrder()` for Supabase RPC lookup in remote mode and cached-order matching in local mode.
+- Changed: added `public.track_order(bigint, text, text)` SECURITY DEFINER RPC and `public.order_track_attempts` table with 5 attempts per 10 minutes by hashed IP/client key.
+- Changed: added client-side attempt limiting, result rendering, WhatsApp help link, footer/mobile-nav tracking links, and `Track this order` on `order-sent.html`.
+- Why: user asked how orders would be tracked without authentication, then approved a guest lookup page with rate limiting.
+- Files changed: `js/store.js`, `js/pages/order-sent.js`, `index.html`, `shop.html`, `product.html`, `cart.html`, `checkout.html`, `custom.html`, `order-sent.html`, `css/styles.css`, `supabase/schema.sql`, `NK.md`; added `track.html`, `js/pages/track.js`.
+- Verification: `node --check` passed on `js/store.js`, `js/pages/track.js`, and `js/pages/order-sent.js`; CSS brace counts matched `css/styles.css 358/358`, `css/admin.css 143/143`, and `css/checkout.css 24/24`; inline-script parse and tag-pair checks passed on all HTML entry points; SQL reference checks found one `track_order` function, one grant pair, and 7 `order_track_attempts` references.
+
+### 2026-11-25 — Supabase production details
+
+- Changed: set `SUPABASE_URL` and `SUPABASE_ANON_KEY` in `js/config.js` from the values supplied by the user.
+- Changed: set `supabase/config.toml` `project_id` to `rkhvgijdsvwtujbqangw`.
+- Changed: left production domain and admin email unset because the user said to leave the domain for now and provide the admin email later.
+- Why: user supplied the Supabase project details needed to move the site off placeholders.
+- Files changed: `js/config.js`, `supabase/config.toml`, `NK.md`.
+- Verification: `node --check js/config.js` passed; the active `SUPABASE_URL`/`SUPABASE_ANON_KEY` constants no longer contain placeholders, with placeholder strings remaining only in the `isSupabaseConfigured()` guard; `isSupabaseConfigured()` still guards remote mode.
+
+### 2026-11-25 — Supabase grant fix after first schema run
+
+- Changed: added explicit `GRANT USAGE` and table grants for `categories`, `products`, `settings`, `profiles`, and `orders` in `supabase/schema.sql`.
+- Why: the user ran the schema, `track_order` RPC worked, but anon REST reads returned HTTP 42501 `permission denied` because the fresh project had no explicit table grants.
+- Files changed: `supabase/schema.sql`, `NK.md`.
+- Verification: `track_order` RPC probe returned HTTP 200 with `[]`; `settings` probe returned HTTP 42501 with hint `GRANT SELECT ON public.settings TO anon;`; updated schema now includes the missing grants and needs to be re-run in SQL Editor.

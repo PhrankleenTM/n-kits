@@ -186,7 +186,7 @@
       : "Enter the local admin password";
     const configLoaded = typeof LOCAL_ADMIN_PASSWORD_HASH === "string" && LOCAL_ADMIN_PASSWORD_HASH.length > 0;
     $("#auth-hint").innerHTML = isSupa
-      ? "No admin yet? Create an account, then run<br><code>UPDATE profiles SET is_admin = true WHERE id = auth.uid();</code><br>in the Supabase SQL editor."
+      ? "Create the admin user in Supabase Dashboard → Authentication → Users, then run<br><code>UPDATE public.profiles SET is_admin = true WHERE id = (SELECT id FROM auth.users WHERE email = 'ADMIN_EMAIL');</code><br>in the Supabase SQL editor."
       : configLoaded
         ? "Local mode — the password is checked against <code>LOCAL_ADMIN_PASSWORD_HASH</code> in js/config.js (only a hash is ever sent to the browser)."
         : '<strong style="color:#d9534f">js/config.js failed to load</strong> — local login is disabled until it does (check the file, then hard-refresh).';

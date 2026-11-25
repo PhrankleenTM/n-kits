@@ -4,6 +4,8 @@ const osParams = new URLSearchParams(window.location.search);
 const osRead = (key) => { try { return sessionStorage.getItem(key); } catch (e) { return null; } };
 const osOrderId = Number(osParams.get("order")) || Number(osRead("retrokit_last_wa_order")) || null;
 
+if (osOrderId) $os("track-order-link").href = "track.html?order=" + encodeURIComponent(osOrderId);
+
 function osConfirmedKey() {
   return "retrokit_wa_order_confirmed_" + (osOrderId || "guest");
 }
@@ -52,11 +54,17 @@ $os("confirm-sent-btn").addEventListener("click", () => {
   showToast("Order confirmed — cart cleared");
 });
 
-Store.getOrders()
-  .then((orders) => {
-    renderOrder(osOrderId ? orders.find((o) => Number(o.id) === osOrderId) : null);
-    try { sessionStorage.removeItem("retrokit_wa_order_pending"); } catch (e) {}
-  })
-  .catch(() => renderOrder(null));
+function renderSavedOrder() {
+  let snapshot = null;
+  try {
+    const raw = sessionStorage.getItem("retrokit_last_wa_order_snapshot");
+    if (raw) snapshot = JSON.parse(raw);
+  } catch (e) {}
+  const order = snapshot && (!osOrderId || Number(snapshot.id) === osOrderId) ? snapshot : null;
+  renderOrder(order);
+  try { sessionStorage.removeItem("retrokit_wa_order_pending"); } catch (e) {}
+}
+
+renderSavedOrder();
 
 if (osRead(osConfirmedKey()) === "1") showConfirmed();

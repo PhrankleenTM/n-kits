@@ -151,7 +151,6 @@ function updateCartBadge() {
 
 function buildOrderMessage(extras) {
   const cart = getCart();
-  const user = typeof getCurrentUser === "function" ? getCurrentUser() : null;
   const prefill =
     typeof Store !== "undefined" ? Store.getSetting("whatsapp_prefill") : "";
   const extra = extras || {};
@@ -171,8 +170,8 @@ function buildOrderMessage(extras) {
   const customTotal = getCustomizationTotal();
   if (customTotal) lines.push("Customization: " + formatPrice(customTotal));
   lines.push("Total: " + formatPrice(getCartTotal()));
-  const name = extra.customer_name || (user && user.name) || "";
-  const email = extra.customer_email || (user && user.email) || "";
+  const name = extra.customer_name || "";
+  const email = extra.customer_email || "";
   if (name) {
     lines.push("");
     lines.push("Name: " + name);
@@ -190,11 +189,10 @@ function buildOrderMessage(extras) {
 
 function buildOrderPayload(extras) {
   const cart = getCart();
-  const user = typeof getCurrentUser === "function" ? getCurrentUser() : null;
+  const extra = extras || {};
   return {
-    customer_name: user && user.name ? user.name : "Guest",
-    customer_email: user && user.email ? user.email : "",
-    user_id: user && user.id && typeof user.id === "string" ? user.id : null,
+    customer_name: extra.customer_name || "Guest",
+    customer_email: extra.customer_email || "",
     total: getCartTotal(),
     customization_total: getCustomizationTotal(),
     items: cart.map((item) => {
@@ -249,6 +247,13 @@ async function sendWhatsAppOrder(extras) {
   }
   if (orderId) {
     try { sessionStorage.setItem("retrokit_last_wa_order", String(orderId)); } catch (e) {}
+    const snapshot =
+      typeof Store !== "undefined"
+        ? Store.orders.find((o) => Number(o.id) === Number(orderId)) || null
+        : null;
+    if (snapshot) {
+      try { sessionStorage.setItem("retrokit_last_wa_order_snapshot", JSON.stringify(snapshot)); } catch (e) {}
+    }
   }
   try { sessionStorage.setItem("retrokit_wa_order_pending", "1"); } catch (e) {}
   window.location.href = "order-sent.html" + (orderId ? "?order=" + encodeURIComponent(orderId) : "");

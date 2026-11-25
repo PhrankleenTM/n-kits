@@ -45,9 +45,9 @@ function renderCart() {
       ${customTotal ? `<div class="summary-row"><span>Customization</span><span>${formatPrice(customTotal)}</span></div>` : ""}
       <div class="summary-row"><span>Shipping</span><span class="text-muted">Confirm on WhatsApp</span></div>
       <div class="summary-row total"><span>Total</span><span>${formatPrice(getCartTotal())}</span></div>
-      <button type="button" class="btn btn-primary btn-block" style="margin-top:20px" onclick="placeOrderOnWhatsApp()">
+      <a href="checkout.html" class="btn btn-primary btn-block" style="margin-top:20px">
         Order on WhatsApp
-      </button>
+      </a>
       <a href="shop.html" class="btn btn-ghost btn-block" style="margin-top:10px">Continue Shopping</a>
     </div>`;
 }

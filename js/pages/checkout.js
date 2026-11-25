@@ -163,13 +163,6 @@ function orderOnWhatsApp() {
   });
 }
 
-Store.ready().then(authReady).then(() => {
-  const user = getCurrentUser();
-  if (user) {
-    if (!$co("co-name").value) $co("co-name").value = user.name || "";
-    if (!$co("co-email").value) $co("co-email").value = user.email || "";
-  }
-  renderSummary();
-});
+Store.ready().then(renderSummary);
 
 $co("wa-btn").addEventListener("click", orderOnWhatsApp);

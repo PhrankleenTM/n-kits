@@ -143,7 +143,6 @@ const Store = (() => {
       id: Number(row.id),
       customer_name: row.customer_name || "",
       customer_email: row.customer_email || "",
-      user_id: row.user_id || null,
       phone: row.phone || "",
       address: row.address || "",
       city: row.city || "",
@@ -401,7 +400,6 @@ const Store = (() => {
     const payload = {
       customer_name: order.customer_name || "",
       customer_email: order.customer_email || "",
-      user_id: order.user_id || null,
       phone: order.phone || "",
       address: order.address || "",
       city: order.city || "",
@@ -472,6 +470,30 @@ const Store = (() => {
     return state.orders;
   }
 
+  async function trackOrder(orderId, match, clientKey) {
+    await ready();
+    const id = Number(orderId);
+    const needle = String(match || "").trim();
+    if (!id || !needle) throw new Error("Enter your order number and phone or email");
+    if (state.remote && getClient()) {
+      const { data, error } = await getClient().rpc("track_order", {
+        p_order_id: id,
+        p_match: needle,
+        p_client: String(clientKey || "")
+      });
+      if (error) throw error;
+      return (data || []).map(rowToOrder)[0] || null;
+    }
+    const digits = String(needle).replace(/\D/g, "");
+    const email = String(needle).toLowerCase();
+    const orders = await getOrders();
+    return orders.find((o) => {
+      const phoneMatch = digits && String(o.phone || "").replace(/\D/g, "") === digits;
+      const emailMatch = String(o.customer_email || "").toLowerCase() === email;
+      return Number(o.id) === id && (phoneMatch || emailMatch);
+    }) || null;
+  }
+
   /* ---------- storage ---------- */
 
   async function uploadImage(file, folder) {
@@ -515,6 +537,7 @@ const Store = (() => {
     updateOrder,
     deleteOrder,
     getOrders,
+    trackOrder,
     uploadImage,
     storageEnabled
   };

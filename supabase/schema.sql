@@ -6,8 +6,8 @@
    2. Open  SQL Editor  ->  New query  ->  paste this file  ->  Run
    3. Project Settings -> API  ->  copy the Project URL and the
       anon/public key into  js/config.js
-   4. Create your admin account on  register.html, then run the
-      "GRANT ADMIN" statement at the bottom of this file.
+    4. Create the admin user in Supabase Dashboard -> Authentication -> Users,
+       then run the "GRANT ADMIN" statement at the bottom of this file.
    5. Storage bucket "product-images" is created below and is
       used by the admin panel's image uploader.
 
@@ -18,21 +18,12 @@
       settings    – key/value store (WhatsApp number, store settings, …)
       orders      – created on WhatsApp checkout; payment is confirmed manually
 
-    EMAIL OTP (signup verification + password reset)
-      Authentication -> Sign In / Providers -> Email:
-        · Confirm email = ON  (sends 6-digit code)
-        · SMTP: use Resend
-            Host  smtp.resend.com
-            Port  465 (SSL)  or  587 (STARTTLS)
-            User  resend
-            Pass  re_xxx  (Resend -> SMTP)
-      Signup/login/reset codes are entered on verify.html.
-
-   SECURITY
-     Row Level Security is enabled everywhere:
-     · everyone can READ products / categories / settings
-     · only admins (profiles.is_admin = true) can write
-     · anyone can INSERT orders, only admins can read/manage them
+    SECURITY
+      Row Level Security is enabled everywhere:
+      · everyone can READ products / categories / settings
+      · only admins (profiles.is_admin = true) can write
+      · anyone can INSERT orders, only admins can read/manage them
+      · customers are guests; there are no customer accounts or OTP flows
    ============================================================ */
 
 -- ------------------------------------------------------------
@@ -80,7 +71,6 @@ create table if not exists public.settings (
 
 create table if not exists public.orders (
   id                bigint generated always as identity primary key,
-  user_id           uuid references auth.users (id) on delete set null,
   customer_name     text default '',
   customer_email    text default '',
   phone             text default '',
@@ -108,6 +98,7 @@ alter table public.orders add column if not exists payment_status    text not nu
 alter table public.orders add column if not exists payment_reference text unique;
 alter table public.orders add column if not exists payment_channel   text default '';
 alter table public.orders add column if not exists paid_at           timestamptz;
+alter table public.orders drop column if exists user_id;
 -- re-apply the check if it was missing on old tables
 do $$
 begin
@@ -118,6 +109,12 @@ begin
     check (payment_status in ('unpaid', 'paid', 'failed', 'refunded'));
 exception when others then null;
 end $$;
+
+create table if not exists public.order_track_attempts (
+  key               text primary key,
+  attempts          integer not null default 0,
+  window_started_at timestamptz not null default now()
+);
 
 create index if not exists products_category_idx   on public.products (category);
 create index if not exists products_created_idx    on public.products (created_at desc);
@@ -146,6 +143,71 @@ as $$
 $$;
 
 grant execute on function public.is_admin () to anon, authenticated;
+
+create or replace function public.track_order(
+  p_order_id bigint,
+  p_match text,
+  p_client text default ''
+)
+returns table (
+  id bigint,
+  customer_name text,
+  customer_email text,
+  phone text,
+  address text,
+  city text,
+  items jsonb,
+  total integer,
+  status text,
+  payment_status text,
+  created_at timestamptz
+)
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_headers jsonb := coalesce(nullif(current_setting('request.headers', true), '')::jsonb, '{}'::jsonb);
+  v_ip text := split_part(coalesce(v_headers ->> 'x-forwarded-for', v_headers ->> 'cf-connecting-ip', v_headers ->> 'x-real-ip', 'guest'), ',', 1);
+  v_key text := md5(trim(v_ip) || ':' || coalesce(nullif(trim(p_client), ''), 'guest'));
+  v_attempts integer;
+  v_started_at timestamptz;
+  v_digits text := regexp_replace(coalesce(p_match, ''), '\D', '', 'g');
+  v_email text := lower(trim(coalesce(p_match, '')));
+begin
+  delete from public.order_track_attempts where window_started_at < now() - interval '1 day';
+
+  select attempts, window_started_at into v_attempts, v_started_at
+  from public.order_track_attempts
+  where key = v_key;
+
+  if found and v_started_at > now() - interval '10 minutes' then
+    if v_attempts >= 5 then
+      raise exception 'Too many tracking attempts. Please try again in a few minutes.' using errcode = 'P0001';
+    end if;
+    update public.order_track_attempts
+      set attempts = attempts + 1
+      where key = v_key;
+  else
+    insert into public.order_track_attempts (key, attempts, window_started_at)
+    values (v_key, 1, now())
+    on conflict (key) do update
+      set attempts = 1, window_started_at = now();
+  end if;
+
+  return query
+  select o.id, o.customer_name, o.customer_email, o.phone, o.address, o.city, o.items, o.total, o.status, o.payment_status, o.created_at
+  from public.orders o
+  where o.id = p_order_id
+    and (
+      (v_digits <> '' and regexp_replace(coalesce(o.phone, ''), '\D', '', 'g') = v_digits)
+      or (v_email <> '' and lower(coalesce(o.customer_email, '')) = v_email)
+    );
+end;
+$$;
+
+revoke all on function public.track_order(bigint, text, text) from public;
+grant execute on function public.track_order(bigint, text, text) to anon, authenticated;
 
 create or replace function public.set_updated_at ()
 returns trigger
@@ -196,6 +258,9 @@ alter table public.categories enable row level security;
 alter table public.products  enable row level security;
 alter table public.settings  enable row level security;
 alter table public.orders    enable row level security;
+alter table public.order_track_attempts enable row level security;
+
+revoke all on table public.order_track_attempts from anon, authenticated;
 
 -- profiles ----------------------------------------------------
 drop policy if exists "profiles read own"        on public.profiles;
@@ -210,14 +275,7 @@ create policy "profiles admin read all"
   on public.profiles for select to authenticated
   using (public.is_admin ());
 
-create policy "profiles update own"
-  on public.profiles for update to authenticated
-  using (id = auth.uid())
-  with check (id = auth.uid());
-
--- users may only update their own name, never is_admin
 revoke update on table public.profiles from anon, authenticated;
-grant  update (name) on table public.profiles to authenticated;
 
 -- categories --------------------------------------------------
 drop policy if exists "categories public read"  on public.categories;
@@ -269,10 +327,6 @@ create policy "orders insert public"
   on public.orders for insert
   with check (true);
 
-create policy "orders read own"
-  on public.orders for select to authenticated
-  using (auth.uid() = user_id);
-
 create policy "orders admin read"
   on public.orders for select to authenticated
   using (public.is_admin ());
@@ -285,6 +339,14 @@ create policy "orders admin update"
 create policy "orders admin delete"
   on public.orders for delete to authenticated
   using (public.is_admin ());
+
+grant usage on schema public to anon, authenticated;
+grant select on table public.categories to anon, authenticated;
+grant select on table public.products to anon, authenticated;
+grant select on table public.settings to anon, authenticated;
+grant select on table public.profiles to authenticated;
+grant insert on table public.orders to anon;
+grant select, insert, update, delete on table public.orders to authenticated;
 
 -- ------------------------------------------------------------
 -- 4. STORAGE (jersey uploads)
@@ -413,16 +475,11 @@ values
 -- ------------------------------------------------------------
 -- 6. GRANT ADMIN
 -- ------------------------------------------------------------
--- Register your admin account on the site (register.html), then
--- run ONE of these statements:
---
--- Option A – by email:
+-- Create the admin user in Supabase Dashboard -> Authentication -> Users,
+-- then run:
 --   update public.profiles
 --     set is_admin = true
 --     where id = (select id from auth.users where email = 'you@example.com');
---
--- Option B – for the account you are signed into right now:
---   update public.profiles set is_admin = true where id = auth.uid();
 --
 -- Verify with:
 --   select email, is_admin from public.profiles
