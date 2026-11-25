@@ -3,6 +3,50 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Private admin panel for N-KITS.">
+    <meta name="keywords" content="N-KITS admin">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="canonical" href="/admin">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="N-KITS">
+    <meta property="og:title" content="Admin – N-KITS">
+    <meta property="og:description" content="Private admin panel for N-KITS.">
+    <meta property="og:url" content="/admin">
+    <meta property="og:image" content="/assets/logo/logo-dusk-transparent.png">
+    <meta property="og:image:alt" content="N-KITS">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="/admin">
+    <meta name="twitter:title" content="Admin – N-KITS">
+    <meta name="twitter:description" content="Private admin panel for N-KITS.">
+    <meta name="twitter:image" content="/assets/logo/logo-dusk-transparent.png">
+    <meta name="theme-color" content="#2E2A4A">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "/#organization",
+          "name": "N-KITS",
+          "description": "Retro football jerseys for club and country, with custom names and numbers."
+        },
+        {
+          "@type": "WebSite",
+          "@id": "/#website",
+          "url": "/",
+          "name": "N-KITS",
+          "publisher": { "@id": "/#organization" }
+        },
+        {
+          "@type": "WebPage",
+          "@id": "/admin#webpage",
+          "url": "/admin",
+          "name": "Admin – N-KITS",
+          "isPartOf": { "@id": "/#website" }
+        }
+      ]
+    }
+    </script>
     <title>Admin – N-KITS</title>
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="stylesheet" href="css/admin.css" />
@@ -13,7 +57,7 @@
     <div class="admin-auth" id="admin-auth">
       <div class="auth-card">
         <div class="admin-auth-brand">
-          <a href="index.html" class="logo" aria-label="N-KITS home">
+          <a href="/" class="logo" aria-label="N-KITS home">
             <img
               class="logo-img logo-img--light"
               src="assets/logo/logo-dusk-transparent.png"
@@ -75,7 +119,7 @@
         </form>
 
         <p class="auth-footer" id="auth-hint"></p>
-        <p class="auth-footer"><a href="index.html">← Back to store</a></p>
+        <p class="auth-footer"><a href="/">← Back to store</a></p>
       </div>
     </div>
 
@@ -83,7 +127,7 @@
     <div class="admin-shell" id="admin-shell" style="display: none">
       <aside class="admin-sidebar" id="admin-sidebar">
         <div class="admin-brand">
-          <a href="index.html" class="logo" aria-label="N-KITS home">
+          <a href="/" class="logo" aria-label="N-KITS home">
             <img
               class="logo-img logo-img--light"
               src="assets/logo/logo-dusk-transparent.png"
@@ -138,7 +182,7 @@
         </nav>
         <div class="admin-side-footer">
           <span class="mode-badge" id="mode-badge">…</span>
-          <a class="admin-link" href="index.html">← View store</a>
+          <a class="admin-link" href="/">← View store</a>
           <button
             type="button"
             class="admin-link admin-logout-btn"

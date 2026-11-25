@@ -4,7 +4,7 @@ const osParams = new URLSearchParams(window.location.search);
 const osRead = (key) => { try { return sessionStorage.getItem(key); } catch (e) { return null; } };
 const osOrderId = Number(osParams.get("order")) || Number(osRead("retrokit_last_wa_order")) || null;
 
-if (osOrderId) $os("track-order-link").href = "track.html?order=" + encodeURIComponent(osOrderId);
+if (osOrderId) $os("track-order-link").href = "/track?order=" + encodeURIComponent(osOrderId);
 
 function osConfirmedKey() {
   return "retrokit_wa_order_confirmed_" + (osOrderId || "guest");

@@ -9,7 +9,7 @@ function renderCart() {
       <div class="empty-state">
         <h2>Your cart is empty</h2>
         <p>Looks like you haven't added any jerseys yet.</p>
-        <a href="shop.html" class="btn btn-primary">Browse Jerseys</a>
+        <a href="/shop" class="btn btn-primary">Browse Jerseys</a>
       </div>`;
     return;
   }
@@ -45,10 +45,10 @@ function renderCart() {
       ${customTotal ? `<div class="summary-row"><span>Customization</span><span>${formatPrice(customTotal)}</span></div>` : ""}
       <div class="summary-row"><span>Shipping</span><span class="text-muted">Confirm on WhatsApp</span></div>
       <div class="summary-row total"><span>Total</span><span>${formatPrice(getCartTotal())}</span></div>
-      <a href="checkout.html" class="btn btn-primary btn-block" style="margin-top:20px">
+      <a href="/checkout" class="btn btn-primary btn-block" style="margin-top:20px">
         Order on WhatsApp
       </a>
-      <a href="shop.html" class="btn btn-ghost btn-block" style="margin-top:10px">Continue Shopping</a>
+      <a href="/shop" class="btn btn-ghost btn-block" style="margin-top:10px">Continue Shopping</a>
     </div>`;
 }
 

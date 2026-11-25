@@ -3,24 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cart – N-KITS</title>
+  <meta name="description" content="Review your selected retro jerseys and customization before ordering on WhatsApp.">
+  <meta name="keywords" content="jersey cart, football jersey order, N-KITS cart">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="/cart">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="N-KITS">
+  <meta property="og:title" content="Your Cart – N-KITS">
+  <meta property="og:description" content="Review your selected retro jerseys and customization before ordering on WhatsApp.">
+  <meta property="og:url" content="/cart">
+  <meta property="og:image" content="/assets/logo/logo-dusk-transparent.png">
+  <meta property="og:image:alt" content="N-KITS">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="/cart">
+  <meta name="twitter:title" content="Your Cart – N-KITS">
+  <meta name="twitter:description" content="Review your selected retro jerseys and customization before ordering on WhatsApp.">
+  <meta name="twitter:image" content="/assets/logo/logo-dusk-transparent.png">
+  <meta name="theme-color" content="#2E2A4A">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "/#organization",
+        "name": "N-KITS",
+        "description": "Retro football jerseys for club and country, with custom names and numbers."
+      },
+      {
+        "@type": "WebSite",
+        "@id": "/#website",
+        "url": "/",
+        "name": "N-KITS",
+        "publisher": { "@id": "/#organization" }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "/cart#webpage",
+        "url": "/cart",
+        "name": "Your Cart – N-KITS",
+        "isPartOf": { "@id": "/#website" }
+      }
+    ]
+  }
+  </script>
+  <title>Your Cart – N-KITS</title>
   <link rel="stylesheet" href="css/styles.css">
   <script src="js/theme.js"></script>
 </head>
 <body>
   <header class="header">
     <div class="container header-inner">
-      <a href="index.html" class="logo" aria-label="N-KITS home">
+      <a href="/" class="logo" aria-label="N-KITS home">
         <img class="logo-img logo-img--light" src="assets/logo/logo-dusk-transparent.png" alt="N-KITS">
         <img class="logo-img logo-img--dark" src="assets/logo/logo-lavender-transparent.png" alt="N-KITS">
       </a>
         <nav class="nav">
-          <a href="index.html">Home</a>
-          <a href="shop.html">Shop</a>
-          <a href="custom.html">Custom</a>
+          <a href="/">Home</a>
+          <a href="/shop">Shop</a>
+          <a href="/custom">Custom</a>
         </nav>
       <div class="header-actions">
-        <a href="cart.html" class="icon-btn" aria-label="Cart">
+        <a href="/cart" class="icon-btn" aria-label="Cart">
           <svg viewBox="0 0 24 24"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M6 6L5 3H2"/></svg>
           <span class="cart-badge" style="display:none">0</span>
         </a>
@@ -37,17 +81,17 @@
 
   <div class="mobile-nav" onclick="toggleMobileMenu()">
     <div class="mobile-nav-inner" onclick="event.stopPropagation()">
-        <a href="index.html">Home</a>
-        <a href="shop.html">Shop</a>
-        <a href="custom.html">Custom</a>
-        <a href="cart.html">Cart</a>
-      <a href="track.html">Track order</a>
+        <a href="/">Home</a>
+        <a href="/shop">Shop</a>
+        <a href="/custom">Custom</a>
+        <a href="/cart">Cart</a>
+      <a href="/track">Track order</a>
     </div>
   </div>
 
   <main class="section">
     <div class="container">
-      <button type="button" class="back-btn" onclick="goBack('shop.html')">
+      <button type="button" class="back-btn" onclick="goBack('/shop')">
         <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
         Back
       </button>
@@ -59,7 +103,7 @@
 
   <footer class="footer">
     <div class="container">
-      <div class="footer-bottom"><span>© 2026 N-KITS</span><a href="track.html">Track order</a></div>
+      <div class="footer-bottom"><span>© 2026 N-KITS</span><a href="/track">Track order</a></div>
     </div>
   </footer>
 

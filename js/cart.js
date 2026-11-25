@@ -256,7 +256,7 @@ async function sendWhatsAppOrder(extras) {
     }
   }
   try { sessionStorage.setItem("retrokit_wa_order_pending", "1"); } catch (e) {}
-  window.location.href = "order-sent.html" + (orderId ? "?order=" + encodeURIComponent(orderId) : "");
+  window.location.href = "/order-sent" + (orderId ? "?order=" + encodeURIComponent(orderId) : "");
 }
 
 function placeOrderOnWhatsApp() {

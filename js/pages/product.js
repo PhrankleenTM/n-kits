@@ -7,12 +7,38 @@ Store.ready().then(() => {
     content.innerHTML = `
       <div class="empty-state">
         <h2>Jersey not found</h2>
-        <a href="shop.html" class="btn btn-primary">Back to Shop</a>
+        <a href="/shop" class="btn btn-primary">Back to Shop</a>
       </div>`;
     return;
   }
 
+  function setMeta(attribute, key, value) {
+    let meta = document.head.querySelector(`meta[${attribute}="${key}"]`);
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.setAttribute(attribute, key);
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute("content", value);
+  }
+
+  const productUrl = "/product?id=" + product.id;
+  const productDescription = product.name + " — " + formatPrice(product.price) + ". View jersey details, sizes, and prices, then order retro football jerseys on WhatsApp.";
   document.title = product.name + " – N-KITS";
+  let canonical = document.head.querySelector('link[rel="canonical"]');
+  if (!canonical) {
+    canonical = document.createElement("link");
+    canonical.setAttribute("rel", "canonical");
+    document.head.appendChild(canonical);
+  }
+  canonical.href = productUrl;
+  setMeta("name", "description", productDescription);
+  setMeta("property", "og:title", document.title);
+  setMeta("property", "og:description", productDescription);
+  setMeta("property", "og:url", productUrl);
+  setMeta("name", "twitter:title", document.title);
+  setMeta("name", "twitter:description", productDescription);
+  setMeta("name", "twitter:url", productUrl);
   const gallery = (product.images && product.images.length ? product.images : [product.image]).filter(Boolean);
   let coverIndex = 0;
   let selectedSize = product.sizes[0];

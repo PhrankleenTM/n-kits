@@ -228,7 +228,9 @@ Remote reads query categories, products, settings, and latest 200 orders in para
 - Supabase URL and anon/public key are configured in `js/config.js:12-13`; Supabase CLI project ID is `rkhvgijdsvwtujbqangw` in `supabase/config.toml`.
 - New Supabase project is reachable; the user ran `supabase/schema.sql`, and `track_order` RPC returns HTTP 200 with `[]`.
 - First schema run lacked explicit table grants; the user re-ran the updated schema and anon reads were verified working.
-- Production domain is intentionally unset pending user input; admin user `anahboniface2017@gmail.com` was created and promoted via Supabase Auth `app_metadata.is_admin`.
+- Production domain is intentionally unset pending user input; canonical/OG URLs are relative until it is known, and `sitemap.xml` is deferred because sitemap loc values must be absolute.
+- Clean URLs are Vercel-only via `vercel.json`; internal links use root-absolute paths such as `/shop`.
+- Admin user `anahboniface2017@gmail.com` was created and promoted via Supabase Auth `app_metadata.is_admin`.
 - Service role key was used transiently and must be rotated because it was shared in chat; it was not written to any repo file.
 - Default WhatsApp number is sample value `2348012345678`: `js/config.js:30` and `supabase/schema.sql` settings seed.
 - Local admin hash is committed in `js/config.js:27`; replacement instructions are in `js/config.js:18-26`.
@@ -710,3 +712,13 @@ These were found during exploration. Do not fix them without explicit user instr
 - Why: the user no longer wants prices inside Shop by Category cards and wants the WhatsApp icon slightly higher.
 - Files changed: `js/pages/index.js`, `css/styles.css`, `NK.md`.
 - Verification: `node --check js/pages/index.js` passed; CSS brace count matched 365/365; grep confirmed no `categoryPriceRange` or `category-price` references remain; `git diff --check` passed.
+
+### 2026-11-25 — Clean URLs and on-page SEO
+
+- Changed: added `vercel.json` with clean-URL redirects and rewrites for every HTML page; internal links now use root-absolute extensionless paths such as `/shop`, `/product?id=1`, and `/track`.
+- Changed: all pages now have unique titles, descriptions, keywords, robots rules, canonical, Open Graph, Twitter, theme-color, `og:site_name`, and JSON-LD structured data; admin is `noindex, nofollow`, all public pages are `index, follow`.
+- Changed: product pages update title, description, canonical, Open Graph, and Twitter metadata from the selected product at runtime.
+- Changed: added `robots.txt` with `User-agent: *` and `Allow: /`; no sitemap was added because no absolute domain is confirmed.
+- Why: the user wants professional on-page SEO and no visible `.html` endings in site links.
+- Files changed: `vercel.json`, `robots.txt`, all 9 HTML pages, `js/app.js`, `js/cart.js`, `js/admin.js`, `js/pages/index.js`, `js/pages/cart.js`, `js/pages/order-sent.js`, `js/pages/product.js`, `NK.md`.
+- Verification: `node --check` passed for all changed JS; `vercel.json` parsed with `JSON.parse`; all 9 HTML files passed tag-pair checks, contained the required SEO tags, and had parseable JSON-LD; grep found no stale internal `.html` links; `git diff --check` passed.

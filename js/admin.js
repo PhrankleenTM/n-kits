@@ -375,7 +375,7 @@
           <a href="#/jerseys/new" class="btn btn-primary btn-sm">+ Add Jersey</a>
           <a href="#/categories" class="btn btn-secondary btn-sm">Manage categories</a>
           <a href="#/settings" class="btn btn-secondary btn-sm">WhatsApp &amp; store settings</a>
-          <a href="index.html" class="btn btn-ghost btn-sm">View store →</a>
+          <a href="/" class="btn btn-ghost btn-sm">View store →</a>
         </div>
       </div>
 

@@ -6,13 +6,13 @@ function createProductCard(product) {
   const defaultSize = product.sizes[0];
   return `
     <article class="product-card">
-      <a href="product.html?id=${product.id}" class="product-image">
+      <a href="/product?id=${product.id}" class="product-image">
         ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ""}
         <img src="${product.image}" alt="${product.name}" loading="lazy">
       </a>
       <div class="product-info">
         <div class="product-club">${product.club}</div>
-        <a href="product.html?id=${product.id}" class="product-name">${product.name}</a>
+        <a href="/product?id=${product.id}" class="product-name">${product.name}</a>
         <div class="product-price">${formatPrice(product.price)}</div>
         <div class="product-actions">
           <button type="button" class="btn btn-primary btn-sm btn-block"
@@ -46,7 +46,7 @@ function goBack(fallback) {
   if (document.referrer && document.referrer.indexOf(location.host) !== -1) {
     history.back();
   } else {
-    window.location.href = fallback || "index.html";
+    window.location.href = fallback || "/";
   }
 }
 

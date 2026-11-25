@@ -11,7 +11,7 @@ Store.ready().then(() => {
     (cat) => {
       const slug = cat.slug || cat.id;
       return `
-  <a href="shop.html?cat=${slug}" class="category-card">
+  <a href="/shop?cat=${slug}" class="category-card">
     <div class="icon">${CATEGORY_MEDIA[slug] || cat.icon}</div>
     <h3>${cat.name}</h3>
   </a>
