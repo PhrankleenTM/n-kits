@@ -33,7 +33,7 @@ Created: 2026-11-25
 - Checkout customization uses separate `Add name` and `Add number` toggles; either one or both can be used, and the fee is charged once per customized jersey.
 - A fixed WhatsApp button is injected on storefront pages and hidden on admin; it uses the admin-configured WhatsApp number, and homepage now mentions custom names and numbers.
 - Dedicated `custom.html` is built and all Custom tabs link to it; its CTAs open `shop.html?custom=1` with the shop banner.
-- WhatsApp orders now save the order, open WhatsApp, and redirect to `order-sent.html?order=<id>`; the cart is cleared only after the user clicks `I've sent the message`.
+- WhatsApp orders now save the order, open WhatsApp, clear the cart immediately, and redirect to `order-sent.html?order=<id>`.
 - Admin can update `payment_status` from the order card, with `Store.updateOrder()` supporting local and remote payment-status changes.
 - No test, lint, typecheck, build, or deployment commands are defined; `node --check` passed on all changed JS files and CSS brace counts matched.
 - Git state: branch `master`, no commits yet; all project files are untracked.
@@ -195,7 +195,7 @@ Remote reads query categories, products, settings, and latest 200 orders in para
 
 - Checkout is WhatsApp-only: `js/pages/checkout.js` validates contact/delivery fields and per-jersey customization, then calls `sendWhatsAppOrder()` in `js/cart.js`.
 - `sendWhatsAppOrder()` opens WhatsApp synchronously, saves the order with `payment_channel: "whatsapp"` and `payment_status: "unpaid"`, then redirects to `order-sent.html?order=<id>`.
-- `order-sent.html` and `js/pages/order-sent.js` render the saved order and clear the cart only after `I've sent the message`; admin can change `payment_status` from the order card for manual records.
+- `order-sent.html` and `js/pages/order-sent.js` render the saved order and show the confirmed state because checkout clears the cart immediately; the `I've sent the message` button remains as a fallback. Admin can change `payment_status` from the order card for manual records.
 - Guest tracking lives at `track.html`; require order number plus the WhatsApp phone or email used at checkout.
 - Remote tracking calls `public.track_order(order_id, match, client_key)` so anon clients cannot scan all orders; local mode matches against cached `Store.orders`.
 - Rate limits: 5 attempts per 10 minutes in-browser and server-side by hashed IP/client key; successful lookup clears the browser limit.
@@ -230,7 +230,8 @@ Remote reads query categories, products, settings, and latest 200 orders in para
 - First schema run lacked explicit table grants; the user re-ran the updated schema and anon reads were verified working.
 - Production domain is intentionally unset pending user input; canonical/OG URLs are relative until it is known, and `sitemap.xml` is deferred because sitemap loc values must be absolute.
 - Clean URLs are Vercel-only via `vercel.json`; internal links use root-absolute paths such as `/shop`.
-- Admin user `anahboniface2017@gmail.com` was created and promoted via Supabase Auth `app_metadata.is_admin`.
+- Admin user `anahboniface2017@gmail.com` was created and promoted via Supabase Auth `app_metadata.is_admin`; `public.is_admin()` now reads that JWT flag, so the updated `supabase/schema.sql` must be re-run before admin RLS writes will work.
+- Guest WhatsApp orders use `public.create_guest_order(jsonb)` so anon clients never need direct order-select access; re-running `supabase/schema.sql` is required.
 - Service role key was used transiently and must be rotated because it was shared in chat; it was not written to any repo file.
 - Default WhatsApp number is sample value `2348012345678`: `js/config.js:30` and `supabase/schema.sql` settings seed.
 - Local admin hash is committed in `js/config.js:27`; replacement instructions are in `js/config.js:18-26`.
@@ -729,3 +730,21 @@ These were found during exploration. Do not fix them without explicit user instr
 - Why: the user asked to bring the WhatsApp icon up a bit more.
 - Files changed: `css/styles.css`, `NK.md`.
 - Verification: CSS brace count matched; `git diff --check` passed.
+
+### 2026-11-25 — Fix Supabase settings writes and guest order tracking
+
+- Changed: `public.is_admin()` now trusts `app_metadata.is_admin` from the JWT before falling back to `profiles.is_admin`.
+- Changed: `authenticated` now has insert/update/delete grants on `categories`, `products`, and `settings`, in addition to select; RLS admin-write policies remain authoritative.
+- Changed: added `public.create_guest_order(jsonb)` SECURITY DEFINER RPC with execute granted to `anon`/`authenticated`; it inserts a guest order and returns only the generated id.
+- Changed: `Store.createOrder()` now calls `create_guest_order` in remote mode instead of inserting with `.select()`, which failed because anon has no order-select policy. Remote order ids are now real database ids, so guest tracking can find them.
+- Why: admin settings saves failed with `permission denied for table settings`, and WhatsApp guest orders were falling back to local ids that the `track_order` RPC cannot see.
+- Files changed: `supabase/schema.sql`, `js/store.js`, `NK.md`.
+- Required action: re-run the updated `supabase/schema.sql` in Supabase SQL Editor before testing; no service role key is needed.
+- Verification: `node --check js/store.js` passed; SQL dollar-quote markers and function names were checked; `git diff --check` passed.
+
+### 2026-11-25 — Clear cart immediately after WhatsApp checkout
+
+- Changed: `sendWhatsAppOrder()` now clears the cart immediately after saving the order and storing the tracking snapshot, then marks the order-sent page as confirmed.
+- Why: the user does not want purchased jerseys to remain in the cart after checkout.
+- Files changed: `js/cart.js`, `NK.md`.
+- Verification: `node --check js/cart.js` passed; grep confirmed `clearCart()` is called in `sendWhatsAppOrder()`; `git diff --check` passed.

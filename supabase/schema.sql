@@ -136,10 +136,11 @@ security definer
 set search_path = public
 stable
 as $$
-  select exists (
-    select 1 from public.profiles
-    where id = auth.uid() and is_admin = true
-  );
+  select coalesce((auth.jwt() #>> '{app_metadata,is_admin}')::boolean, false)
+      or exists (
+        select 1 from public.profiles
+        where id = auth.uid() and is_admin = true
+      );
 $$;
 
 grant execute on function public.is_admin () to anon, authenticated;
@@ -208,6 +209,54 @@ $$;
 
 revoke all on function public.track_order(bigint, text, text) from public;
 grant execute on function public.track_order(bigint, text, text) to anon, authenticated;
+
+create or replace function public.create_guest_order(p_order jsonb)
+returns bigint
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_id bigint;
+begin
+  insert into public.orders (
+    customer_name,
+    customer_email,
+    phone,
+    address,
+    city,
+    items,
+    total,
+    status,
+    payment_status,
+    payment_reference,
+    payment_channel,
+    paid_at,
+    note
+  )
+  values (
+    coalesce(p_order ->> 'customer_name', ''),
+    coalesce(p_order ->> 'customer_email', ''),
+    coalesce(p_order ->> 'phone', ''),
+    coalesce(p_order ->> 'address', ''),
+    coalesce(p_order ->> 'city', ''),
+    coalesce(p_order -> 'items', '[]'::jsonb),
+    coalesce((p_order ->> 'total')::integer, 0),
+    'pending',
+    coalesce(p_order ->> 'payment_status', 'unpaid'),
+    nullif(p_order ->> 'payment_reference', ''),
+    coalesce(p_order ->> 'payment_channel', ''),
+    nullif(p_order ->> 'paid_at', '')::timestamptz,
+    coalesce(p_order ->> 'note', '')
+  )
+  returning id into v_id;
+
+  return v_id;
+end;
+$$;
+
+revoke all on function public.create_guest_order(jsonb) from public;
+grant execute on function public.create_guest_order(jsonb) to anon, authenticated;
 
 create or replace function public.set_updated_at ()
 returns trigger
@@ -345,6 +394,9 @@ grant select on table public.categories to anon, authenticated;
 grant select on table public.products to anon, authenticated;
 grant select on table public.settings to anon, authenticated;
 grant select on table public.profiles to authenticated;
+grant insert, update, delete on table public.categories to authenticated;
+grant insert, update, delete on table public.products to authenticated;
+grant insert, update, delete on table public.settings to authenticated;
 grant insert on table public.orders to anon;
 grant select, insert, update, delete on table public.orders to authenticated;
 

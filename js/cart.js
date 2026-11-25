@@ -255,7 +255,11 @@ async function sendWhatsAppOrder(extras) {
       try { sessionStorage.setItem("retrokit_last_wa_order_snapshot", JSON.stringify(snapshot)); } catch (e) {}
     }
   }
-  try { sessionStorage.setItem("retrokit_wa_order_pending", "1"); } catch (e) {}
+  clearCart();
+  try {
+    sessionStorage.setItem("retrokit_wa_order_confirmed_" + (orderId || "guest"), "1");
+    sessionStorage.removeItem("retrokit_wa_order_pending");
+  } catch (e) {}
   window.location.href = "/order-sent" + (orderId ? "?order=" + encodeURIComponent(orderId) : "");
 }
 

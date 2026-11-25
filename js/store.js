@@ -415,12 +415,14 @@ const Store = (() => {
 
     if (state.remote) {
       try {
-        const { data, error } = await getClient().from("orders").insert(payload).select().single();
+        const { data, error } = await getClient().rpc("create_guest_order", { p_order: payload });
         if (error) throw error;
-        const row = rowToOrder(data);
+        const id = Number(data);
+        if (!id) throw new Error("Guest order was not created");
+        const row = { ...payload, id, created_at: new Date().toISOString() };
         state.orders.unshift(row);
         writeLS(LS.orders, state.orders);
-        return row.id;
+        return id;
       } catch (e) {
         console.warn("Order not saved to Supabase", e && e.message);
       }
