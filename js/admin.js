@@ -440,7 +440,7 @@
       <div class="admin-card no-pad">
         ${
           list.length
-            ? `<div class="table-scroll"><table class="admin-table">
+            ? `<div class="table-scroll"><table class="admin-table jerseys-table">
                 <thead><tr><th></th><th>Jersey</th><th>Category</th><th>Price</th><th>Badge</th><th>Stock</th><th></th></tr></thead>
                 <tbody>${rows}</tbody></table></div>`
             : `<p class="text-muted empty-line">${Store.products.length ? "No jerseys match your search." : "No jerseys yet — add your first one."}</p>`

@@ -678,3 +678,11 @@ These were found during exploration. Do not fix them without explicit user instr
 - Why: the user does not want setup instructions visible on the login page.
 - Files changed: `js/admin.js`, `NK.md`.
 - Verification: `node --check js/admin.js` passed; grep no longer finds `Create the admin user` or `Set is_admin = true` in `js/admin.js`.
+
+### 2026-11-25 — Responsive admin jerseys table
+
+- Changed: jerseys table now uses a `jerseys-table` class and converts to a card-style grid at 640px and below, keeping row images visible.
+- Changed: on small screens, Edit and Delete stack vertically inside the same table row instead of sharing a line.
+- Why: the user could not see jersey images on small screens and wanted Edit above Delete while staying in the same row.
+- Files changed: `js/admin.js`, `css/admin.css`, `NK.md`.
+- Verification: `node --check js/admin.js` passed; `css/admin.css` brace count matched 160/160; `git diff --check` passed.
