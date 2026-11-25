@@ -671,3 +671,10 @@ These were found during exploration. Do not fix them without explicit user instr
 - Why: the service role key lacked table grants for a direct `profiles` update, and the user supplied the admin email/password; app_metadata avoids another SQL-editor step.
 - Files changed: `js/auth.js`, `js/admin.js`, `NK.md`; no secrets or passwords were written to repo files.
 - Verification: Admin API create returned user `33028e8b-f2ec-4b69-859c-e6c602323148`; Admin API update returned `is_admin=True`; password login returned an access token with `app_metadata.is_admin=True`; service role key must be rotated because it was shared in chat.
+
+### 2026-11-25 — Hide admin setup instructions from login page
+
+- Changed: Supabase admin login no longer renders the create-admin/SQL hint, and the access-denied message no longer tells users to edit `profiles.is_admin`.
+- Why: the user does not want setup instructions visible on the login page.
+- Files changed: `js/admin.js`, `NK.md`.
+- Verification: `node --check js/admin.js` passed; grep no longer finds `Create the admin user` or `Set is_admin = true` in `js/admin.js`.

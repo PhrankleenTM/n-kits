@@ -186,11 +186,15 @@
       ? "Sign in with the Supabase account that has admin access"
       : "Enter the local admin password";
     const configLoaded = typeof LOCAL_ADMIN_PASSWORD_HASH === "string" && LOCAL_ADMIN_PASSWORD_HASH.length > 0;
-    $("#auth-hint").innerHTML = isSupa
-      ? "Create the admin user in Supabase Dashboard → Authentication → Users, then run<br><code>UPDATE public.profiles SET is_admin = true WHERE id = (SELECT id FROM auth.users WHERE email = 'ADMIN_EMAIL');</code><br>in the Supabase SQL editor."
-      : configLoaded
+    if (isSupa) {
+      $("#auth-hint").textContent = "";
+      $("#auth-hint").style.display = "none";
+    } else {
+      $("#auth-hint").style.display = "";
+      $("#auth-hint").innerHTML = configLoaded
         ? "Local mode — the password is checked against <code>LOCAL_ADMIN_PASSWORD_HASH</code> in js/config.js (only a hash is ever sent to the browser)."
         : '<strong style="color:#d9534f">js/config.js failed to load</strong> — local login is disabled until it does (check the file, then hard-refresh).';
+    }
     const err = $("#auth-error");
     if (message) {
       err.style.display = "";
@@ -227,7 +231,7 @@
           const sb = Store.supabase();
           if (sb) { try { await sb.auth.signOut(); } catch (x) {} }
           setCurrentUser(null);
-          showAuthCard("This account does not have admin access. Set is_admin = true for it in the profiles table.");
+          showAuthCard("This account does not have admin access.");
         }
         return;
       }
